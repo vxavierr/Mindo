@@ -19,6 +19,7 @@ const router = createHashRouter([
     children: [
       { index: true, element: <DashboardPage /> },
       { path: 'canvas', element: <CanvasPage /> },
+      { path: 'canvas/node/:nodeId', element: <CanvasPage /> },
       { path: 'settings', element: <SettingsPage /> },
       { path: 'review', element: <ReviewLobby /> },
     ],

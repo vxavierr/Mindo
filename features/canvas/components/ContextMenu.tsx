@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, Edit, Type } from 'lucide-react';
+import { Trash2, Edit, Type, Network } from 'lucide-react';
 
 interface ContextMenuProps {
   x: number;
@@ -8,10 +8,11 @@ interface ContextMenuProps {
   onDelete: (ids: string[]) => void;
   onEdit: (id: string) => void;
   onRename: (id: string) => void;
+  onAddChild?: (id: string) => void;
   onClose: () => void;
 }
 
-export function ContextMenu({ x, y, nodeIds, onDelete, onEdit, onRename, onClose }: ContextMenuProps) {
+export function ContextMenu({ x, y, nodeIds, onDelete, onEdit, onRename, onAddChild, onClose }: ContextMenuProps) {
   const isMulti = nodeIds.length > 1;
 
   return (

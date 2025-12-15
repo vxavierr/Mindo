@@ -21,6 +21,7 @@ export interface GraphSlice {
   userId: string | null;
   nodes: MindNode[];
   edges: Edge<EdgeData>[];
+  isGraphLoaded: boolean;
 
   setUserId: (id: string) => void;
   loadGraph: (userId: string) => Promise<void>;
@@ -29,7 +30,7 @@ export interface GraphSlice {
   onEdgesChange: (changes: EdgeChange[]) => void;
   onConnect: (connection: Connection) => void;
 
-  addNode: (label: string, type: 'text' | 'audio', parentId?: string, status?: NodeStatus) => string;
+  addNode: (label: string, type: 'text' | 'audio', parentId?: string, status?: NodeStatus, connectionLabel?: string) => string;
   updateNode: (nodeId: string, data: Partial<MindNodeData>) => void;
   updateNodePosition: (nodeId: string, position: { x: number, y: number }) => void;
   activateNodeFromInbox: (nodeId: string, position: { x: number, y: number }) => void;
@@ -40,6 +41,7 @@ export interface GraphSlice {
   // Socratic/Synapse Logic
   solidifyEdge: (edgeId: string, label: string) => void;
   cancelEdge: (edgeId: string) => void;
+  createSolidEdge: (sourceId: string, targetId: string, label: string) => void;
 
   // Content Logic (Partial)
   unlockNodeContent: (nodeId: string) => void;
@@ -57,6 +59,7 @@ export const createGraphSlice: StateCreator<MindoState, [], [], GraphSlice> = (s
   userId: null,
   nodes: [], // Start empty, load from DB
   edges: [],
+  isGraphLoaded: false,
 
   setUserId: (id) => set({ userId: id }),
 
@@ -101,13 +104,15 @@ export const createGraphSlice: StateCreator<MindoState, [], [], GraphSlice> = (s
         type: dto.type,
         data: {
           label: dto.label,
+          semanticLabel: dto.label || undefined, // Map DB label to semanticLabel
           isTentative: dto.is_tentative
         }
       }));
 
-      set({ nodes, edges });
+      set({ nodes, edges, isGraphLoaded: true });
     } catch (error) {
       console.error('Failed to load graph:', error);
+      set({ isGraphLoaded: true }); // Set true even on error to prevent infinite loading
     }
   },
 
@@ -133,7 +138,7 @@ export const createGraphSlice: StateCreator<MindoState, [], [], GraphSlice> = (s
     set({ edges: applyEdgeChanges(changes, get().edges) as Edge<EdgeData>[] });
   },
 
-  addNode: (label, type, parentId, status = 'new') => {
+  addNode: (label, type, parentId, status = 'new', connectionLabel) => {
     const userId = get().userId;
     if (!userId) {
       console.error("Cannot create node: No user ID");
@@ -174,7 +179,11 @@ export const createGraphSlice: StateCreator<MindoState, [], [], GraphSlice> = (s
           source: parentId,
           target: newNodeId,
           type: 'socratic',
-          data: { isTentative: true }
+          data: {
+            isTentative: !connectionLabel, // If label provided, it's not tentative
+            semanticLabel: connectionLabel,
+            label: connectionLabel
+          }
         };
         newEdges = addEdge(newEdge, state.edges);
 
@@ -200,6 +209,12 @@ export const createGraphSlice: StateCreator<MindoState, [], [], GraphSlice> = (s
     if (data.label) updates.title = data.label;
     if (data.content) updates.content = data.content;
     if (data.status) updates.status = data.status;
+
+    // Basic MU Sync: If content changed, we might need to update textSegments
+    // Ideally this should be more robust (diffing), but for now we rely on the editor to send updates
+    // or we could implement a check here if needed.
+    // For this MVP, we assume the Editor handles the text segment updates via updateMemoryUnit calls
+    // BUT, if we wanted to be safe, we could check if segments are missing.
 
     if (Object.keys(updates).length > 0) {
       nodesApi.updateNode(nodeId, updates).catch(console.error);
@@ -297,6 +312,37 @@ export const createGraphSlice: StateCreator<MindoState, [], [], GraphSlice> = (s
   cancelEdge: (id) => {
     set(state => ({ edges: state.edges.filter(e => e.id !== id) }));
     edgesApi.deleteEdge(id).catch(console.error);
+  },
+
+  createSolidEdge: (sourceId, targetId, label) => {
+    const userId = get().userId;
+    if (!userId) return;
+
+    const edgeId = crypto.randomUUID();
+    const newEdge: Edge<EdgeData> = {
+      id: edgeId,
+      source: sourceId,
+      target: targetId,
+      type: 'semantic',
+      data: {
+        isTentative: false,
+        semanticLabel: label,
+        label: label
+      }
+    };
+
+    set(state => ({
+      edges: addEdge(newEdge, state.edges)
+    }));
+
+    // Update weights
+    const sourceNode = get().nodes.find(n => n.id === sourceId);
+    const targetNode = get().nodes.find(n => n.id === targetId);
+    if (sourceNode) get().updateNode(sourceId, { weight: (sourceNode.data.weight || 0) + 1 });
+    if (targetNode) get().updateNode(targetId, { weight: (targetNode.data.weight || 0) + 1 });
+
+    // Persist to DB
+    edgesApi.createEdge(newEdge, userId).catch(console.error);
   },
 
   organizeGraph: () => {

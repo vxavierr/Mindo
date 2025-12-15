@@ -14,9 +14,11 @@ export function SocraticEdge({
   targetPosition,
   style = {},
   markerEnd,
+  data,
 }: EdgeProps) {
   const { solidifyEdge, cancelEdge } = useMindoStore();
-  const [label, setLabel] = useState('');
+  // Initialize from saved data
+  const [label, setLabel] = useState(data?.semanticLabel || data?.label || '');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [edgePath, labelX, labelY] = getBezierPath({

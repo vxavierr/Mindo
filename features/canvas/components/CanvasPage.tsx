@@ -14,6 +14,7 @@ import ReactFlow, {
 import { LayoutTemplate, BrainCircuit, Share2, MousePointerClick } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 
 import { useMindoStore } from '../../../store/useMindoStore';
 import { useAuth } from '../../auth/AuthContext';
@@ -40,8 +41,10 @@ const edgeTypes: EdgeTypes = {
 function CanvasContent() {
   useCanvasShortcuts();
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const { nodes, edges, theme, interactionMode, isSelectingForReview, selectionDraft } = useMindoStore(
+  const { nodes, edges, theme, interactionMode, isSelectingForReview, selectionDraft, activeNodeId } = useMindoStore(
     useShallow((state) => ({
       nodes: state.nodes,
       edges: state.edges,
@@ -49,6 +52,7 @@ function CanvasContent() {
       interactionMode: state.interactionMode,
       isSelectingForReview: state.isSelectingForReview,
       selectionDraft: state.selectionDraft,
+      activeNodeId: state.activeNodeId,
     }))
   );
 
@@ -69,11 +73,33 @@ function CanvasContent() {
     loadGraph: state.loadGraph,
   }));
 
+  const isGraphLoaded = useMindoStore(state => state.isGraphLoaded);
+
   useEffect(() => {
     if (user) {
       loadGraph(user.id);
     }
   }, [user, loadGraph]);
+
+  // Read nodeId from URL params
+  const { nodeId: urlNodeId } = useParams<{ nodeId?: string }>();
+
+  // Auto-open editor if nodeId is in URL - only after graph is loaded
+  useEffect(() => {
+    if (urlNodeId && isGraphLoaded) {
+      const nodeExists = nodes.some(n => n.id === urlNodeId);
+      if (nodeExists) {
+        openEditor(urlNodeId);
+      }
+    }
+  }, [urlNodeId, isGraphLoaded, nodes, openEditor]);
+
+  // Bidirectional sync: if editor closes but URL still has node, navigate back to /canvas
+  useEffect(() => {
+    if (!activeNodeId && location.pathname.includes('/node/')) {
+      navigate('/canvas', { replace: true });
+    }
+  }, [activeNodeId, location.pathname, navigate]);
 
   const { project } = useReactFlow();
   const [menu, setMenu] = useState<{ nodeIds: string[]; x: number; y: number } | null>(null);

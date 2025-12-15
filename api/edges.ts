@@ -20,7 +20,7 @@ export const edgesApi = {
             source_id: edge.source,
             target_id: edge.target,
             type: 'socratic', // Default type
-            label: edge.label as string || null,
+            label: (edge.data?.semanticLabel || edge.data?.label || edge.label) as string || null,
             is_tentative: false,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
