@@ -4,7 +4,7 @@ import { Trash2, Edit, Type } from 'lucide-react';
 interface ContextMenuProps {
   x: number;
   y: number;
-  nodeIds: string[]; 
+  nodeIds: string[];
   onDelete: (ids: string[]) => void;
   onEdit: (id: string) => void;
   onRename: (id: string) => void;
@@ -15,8 +15,8 @@ export function ContextMenu({ x, y, nodeIds, onDelete, onEdit, onRename, onClose
   const isMulti = nodeIds.length > 1;
 
   return (
-    <div 
-      style={{ top: y, left: x }} 
+    <div
+      style={{ top: y, left: x }}
       className="fixed z-50 min-w-[200px] bg-mindo-depth/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col p-1 animate-fade-in-up origin-top-left ring-1 ring-white/5"
       onClick={(e) => e.stopPropagation()}
     >
@@ -26,7 +26,7 @@ export function ContextMenu({ x, y, nodeIds, onDelete, onEdit, onRename, onClose
 
       {!isMulti && (
         <>
-          <button 
+          <button
             onClick={(e) => { e.stopPropagation(); onEdit(nodeIds[0]); onClose(); }}
             className="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors text-left"
           >
@@ -34,7 +34,7 @@ export function ContextMenu({ x, y, nodeIds, onDelete, onEdit, onRename, onClose
             <span>Open Editor</span>
           </button>
 
-          <button 
+          <button
             onClick={(e) => { e.stopPropagation(); onRename(nodeIds[0]); onClose(); }}
             className="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors text-left"
           >
@@ -42,11 +42,19 @@ export function ContextMenu({ x, y, nodeIds, onDelete, onEdit, onRename, onClose
             <span>Quick Rename</span>
           </button>
 
+          <button
+            onClick={(e) => { e.stopPropagation(); onAddChild?.(nodeIds[0]); onClose(); }}
+            className="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors text-left"
+          >
+            <Network size={16} className="text-green-400" />
+            <span>Add Child Node</span>
+          </button>
+
           <div className="h-px bg-white/10 my-1 mx-2" />
         </>
       )}
-      
-      <button 
+
+      <button
         onClick={(e) => { e.stopPropagation(); onDelete(nodeIds); onClose(); }}
         className="flex items-center gap-3 px-3 py-2.5 text-sm text-red-400 hover:text-white hover:bg-red-500/20 rounded-lg transition-colors text-left"
       >

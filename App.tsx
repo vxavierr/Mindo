@@ -8,17 +8,9 @@ import { ReviewLobby } from './features/review/components/ReviewLobby';
 import { ReviewSession } from './features/review/components/ReviewSession';
 import { FeynmanGuardian } from './features/review/components/FeynmanGuardian';
 import { useMindoStore } from './store/useMindoStore';
+import { AuthPage } from './features/auth/components/AuthPage';
 
-// Simple Settings Placeholder
-const SettingsPage = () => (
-  <div className="p-10 flex flex-col items-center justify-center h-full text-center">
-    <div className="p-4 bg-white/5 dark:bg-white/50 bg-slate-200 rounded-full border border-white/10 mb-4">
-      <span className="text-4xl">⚙️</span>
-    </div>
-    <h1 className="text-3xl font-bold dark:text-white text-slate-800 mb-2">Settings</h1>
-    <p className="text-slate-500">Configuration options coming soon.</p>
-  </div>
-);
+import { SettingsPage } from './features/settings/components/SettingsPage';
 
 const router = createHashRouter([
   {
@@ -32,6 +24,10 @@ const router = createHashRouter([
     ],
   },
   {
+    path: '/login',
+    element: <AuthPage />,
+  },
+  {
     path: '/review/session',
     element: <ReviewSession />,
   },
@@ -40,6 +36,8 @@ const router = createHashRouter([
     element: <Navigate to="/" replace />,
   },
 ]);
+
+import { AuthProvider } from './features/auth/AuthContext';
 
 export default function App() {
   const { theme } = useMindoStore();
@@ -53,9 +51,9 @@ export default function App() {
   }, [theme]);
 
   return (
-    <>
+    <AuthProvider>
       <RouterProvider router={router} />
-      <FeynmanGuardian /> 
-    </>
+      <FeynmanGuardian />
+    </AuthProvider>
   );
 }

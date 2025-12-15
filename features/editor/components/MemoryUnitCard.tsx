@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 import { Check, Edit2 } from 'lucide-react';
 import { MemoryUnit } from '../../canvas/types'; // Types are now in feature/canvas/types
 import { useMindoStore } from '../../../store/useMindoStore';
-import { useEditorContext } from '../../../components/editor/EditorContext';
+import { useEditorContext } from './EditorContext';
 
 interface MemoryUnitCardProps {
-  unit: MemoryUnit;
-  nodeId: string;
+    unit: MemoryUnit;
+    nodeId: string;
 }
 
 export const MemoryUnitCard: React.FC<MemoryUnitCardProps> = ({ unit, nodeId }) => {
@@ -25,14 +25,14 @@ export const MemoryUnitCard: React.FC<MemoryUnitCardProps> = ({ unit, nodeId }) 
     if (isEditing) {
         return (
             <div className="p-3 rounded-lg border bg-white dark:bg-white/5 border-indigo-300 dark:border-mindo-glow shadow-md space-y-2">
-                <input 
-                    value={q} 
+                <input
+                    value={q}
                     onChange={e => setQ(e.target.value)}
                     className="w-full text-sm font-bold bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/10 rounded px-2 py-1 outline-none focus:border-indigo-500"
                     placeholder="Question..."
                     autoFocus
                 />
-                <textarea 
+                <textarea
                     value={a}
                     onChange={e => setA(e.target.value)}
                     className="w-full text-xs bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/10 rounded px-2 py-1 outline-none focus:border-indigo-500 resize-none h-16"
@@ -47,16 +47,15 @@ export const MemoryUnitCard: React.FC<MemoryUnitCardProps> = ({ unit, nodeId }) 
     }
 
     return (
-        <div 
-           onMouseEnter={() => setHoveredUnitId(unit.id)}
-           onMouseLeave={() => setHoveredUnitId(null)}
-           className={`p-3 rounded-lg border transition-all cursor-pointer group relative ${
-               hoveredUnitId === unit.id 
-               ? 'bg-white dark:bg-mindo-primary/10 border-indigo-500 dark:border-mindo-glow shadow-md translate-x-1' 
-               : 'bg-white dark:bg-white/5 border-slate-200 dark:border-white/5 hover:border-indigo-300 dark:hover:border-white/20'
-           }`}
+        <div
+            onMouseEnter={() => setHoveredUnitId(unit.id)}
+            onMouseLeave={() => setHoveredUnitId(null)}
+            className={`p-3 rounded-lg border transition-all cursor-pointer group relative ${hoveredUnitId === unit.id
+                    ? 'bg-white dark:bg-mindo-primary/10 border-indigo-500 dark:border-mindo-glow shadow-md translate-x-1'
+                    : 'bg-white dark:bg-white/5 border-slate-200 dark:border-white/5 hover:border-indigo-300 dark:hover:border-white/20'
+                }`}
         >
-            <button 
+            <button
                 onClick={(e) => { e.stopPropagation(); setIsEditing(true); }}
                 className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 p-1 hover:bg-slate-100 dark:hover:bg-white/20 rounded text-slate-500"
             >

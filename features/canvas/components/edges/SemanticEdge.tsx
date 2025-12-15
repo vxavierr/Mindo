@@ -22,7 +22,7 @@ export function SemanticEdge({
     targetY,
     targetPosition,
   });
-  
+
   const { theme } = useMindoStore();
   const label = data?.semanticLabel || 'link';
 
@@ -33,9 +33,9 @@ export function SemanticEdge({
         markerEnd={markerEnd}
         style={{
           ...style,
-          strokeWidth: 2,
+          strokeWidth: 3,
           stroke: theme === 'dark' ? '#94a3b8' : '#64748b',
-          strokeOpacity: 0.6,
+          strokeOpacity: 0.8,
         }}
       />
       {/* @ts-ignore */}
@@ -49,9 +49,9 @@ export function SemanticEdge({
           className="z-10"
         >
           <div className="bg-white dark:bg-mindo-void px-2 py-1 rounded-md border border-slate-200 dark:border-white/10 shadow-sm">
-             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-               {label}
-             </span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              {label}
+            </span>
           </div>
         </div>
       </EdgeLabelRenderer>

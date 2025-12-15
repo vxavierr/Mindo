@@ -39,7 +39,7 @@ export function SocraticEdge({
       if (label.trim()) {
         solidifyEdge(id, label.trim());
       } else {
-        cancelEdge(id); 
+        cancelEdge(id);
       }
     } else if (e.key === 'Escape') {
       cancelEdge(id);
@@ -57,11 +57,12 @@ export function SocraticEdge({
       <path
         id={id}
         style={{
-            ...style,
-            strokeWidth: 2,
-            stroke: '#c084fc', 
-            strokeDasharray: '5, 5',
-            animation: 'dash 1s linear infinite', 
+          ...style,
+          strokeWidth: 3,
+          stroke: '#c084fc',
+          strokeDasharray: '5, 5',
+          animation: 'dash 1s linear infinite',
+          opacity: 0.8,
         }}
         className="react-flow__edge-path"
         d={edgePath}
@@ -86,7 +87,7 @@ export function SocraticEdge({
               <div className="absolute -inset-1 bg-gradient-to-r from-mindo-accent to-mindo-primary rounded-lg blur opacity-50 group-hover:opacity-100 transition duration-200"></div>
               <div className="relative bg-[#02040A] rounded-lg border border-mindo-accent/50 p-1 flex items-center shadow-2xl">
                 <div className="bg-mindo-accent/20 p-1 rounded mr-2">
-                    <HelpCircle size={14} className="text-mindo-accent animate-pulse" />
+                  <HelpCircle size={14} className="text-mindo-accent animate-pulse" />
                 </div>
                 <input
                   ref={inputRef}

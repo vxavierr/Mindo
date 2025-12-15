@@ -11,7 +11,7 @@ const zoomSelector = (s: ReactFlowState) => s.transform[2];
 
 export const MindNodeComponent = memo((props: NodeProps<MindNodeData>) => {
   const zoom = useStore(zoomSelector);
-  const { id, data, selected } = props; 
+  const { id, data, selected } = props;
 
   const health = calculateNodeHealth(data.lastReview, data.status);
   const styles = getHealthStyles(health, selected);
@@ -43,14 +43,14 @@ export const MindNodeComponent = memo((props: NodeProps<MindNodeData>) => {
             exit={{ opacity: 0, scale: 1.2, filter: 'blur(8px)' }}
             transition={{ type: "spring", stiffness: 200, damping: 20, mass: 0.8 }}
             style={{ transformOrigin: 'center center', pointerEvents: 'all' }}
-            className={`${styles.glow} ${styles.animation}`}
+            className={`${styles.glow} ${styles.animation} rounded-full`}
           >
             <Component id={id} {...props} />
           </motion.div>
         </AnimatePresence>
 
-        <Handle type="target" position={Position.Top} className="!w-12 !h-2 !bg-mindo-glow !rounded-full !-top-[3px] opacity-0 hover:opacity-100 transition-all duration-300 !border-none shadow-[0_0_15px_#a78bfa]" />
-        <Handle type="source" position={Position.Bottom} className="!w-4 !h-4 !bg-black !border-2 !border-mindo-glow !bottom-[-8px] shadow-[0_0_15px_#a78bfa] transition-all duration-300 hover:scale-125 cursor-crosshair" />
+        <Handle type="target" position={Position.Top} className="!w-12 !h-2 !bg-mindo-glow !rounded-full !-top-[3px] opacity-0 hover:opacity-100 transition-all duration-300 !border-none shadow-[0_0_15px_#a78bfa] z-50" />
+        <Handle type="source" position={Position.Bottom} className="!w-4 !h-4 !bg-black !border-2 !border-mindo-glow !bottom-[-8px] shadow-[0_0_15px_#a78bfa] transition-all duration-300 hover:scale-125 cursor-crosshair z-50" />
       </div>
     </div>
   );

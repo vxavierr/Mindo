@@ -1,178 +1,180 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MINDO - Neural Knowledge Graph</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reactflow/dist/style.css" />
-    
-    <script>
-      tailwind.config = {
-        darkMode: 'class', // Enable class-based dark mode
-        theme: {
-          extend: {
-            colors: {
-              mindo: {
-                void: '#0B1120', // Lighter than #02040A for better contrast
-                depth: '#1E293B',
-                surface: '#334155',
-                glass: 'rgba(30, 41, 59, 0.7)',
-                glow: '#38bdf8',
-                primary: '#6366f1',
-                accent: '#c084fc',
-              }
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MINDO - Neural Knowledge Graph</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reactflow/dist/style.css" />
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class', // Enable class-based dark mode
+      theme: {
+        extend: {
+          colors: {
+            mindo: {
+              void: '#0B1120', // Lighter than #02040A for better contrast
+              depth: '#1E293B',
+              surface: '#334155',
+              glass: 'rgba(30, 41, 59, 0.7)',
+              glow: '#38bdf8',
+              primary: '#6366f1',
+              accent: '#c084fc',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          boxShadow: {
+            'neon': '0 0 25px -5px rgba(56, 189, 248, 0.6), inset 0 0 0 1px rgba(255,255,255,0.1)',
+            'glass': '0 20px 40px -10px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.08)',
+            'glass-light': '0 20px 40px -10px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.4)',
+          },
+          animation: {
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'slide-in-right': 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+            'tilt': 'tilt 10s infinite linear',
+            'fade-in-up': 'fadeInUp 0.2s ease-out forwards',
+          },
+          keyframes: {
+            slideInRight: {
+              from: { transform: 'translateX(100%)', opacity: '0' },
+              to: { transform: 'translateX(0)', opacity: '1' },
             },
-            fontFamily: {
-              sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-              mono: ['"JetBrains Mono"', 'monospace'],
+            tilt: {
+              '0%, 50%, 100%': { transform: 'rotate(0deg)' },
+              '25%': { transform: 'rotate(0.5deg)' },
+              '75%': { transform: 'rotate(-0.5deg)' },
             },
-            boxShadow: {
-              'neon': '0 0 25px -5px rgba(56, 189, 248, 0.6), inset 0 0 0 1px rgba(255,255,255,0.1)',
-              'glass': '0 20px 40px -10px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.08)',
-              'glass-light': '0 20px 40px -10px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.4)',
-            },
-            animation: {
-              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-              'slide-in-right': 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-              'tilt': 'tilt 10s infinite linear',
-              'fade-in-up': 'fadeInUp 0.2s ease-out forwards',
-            },
-            keyframes: {
-              slideInRight: {
-                from: { transform: 'translateX(100%)', opacity: '0' },
-                to: { transform: 'translateX(0)', opacity: '1' },
-              },
-              tilt: {
-                '0%, 50%, 100%': { transform: 'rotate(0deg)' },
-                '25%': { transform: 'rotate(0.5deg)' },
-                '75%': { transform: 'rotate(-0.5deg)' },
-              },
-              fadeInUp: {
-                '0%': { opacity: '0', transform: 'translateY(10px) scale(0.95)' },
-                '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
-              }
+            fadeInUp: {
+              '0%': { opacity: '0', transform: 'translateY(10px) scale(0.95)' },
+              '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
             }
           }
         }
       }
-    </script>
+    }
+  </script>
 
-    <style>
-      /* CRITICAL FIX: Ensure full height for React rendering */
-      html, body, #root {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
+  <style>
+    /* CRITICAL FIX: Ensure full height for React rendering */
+    html,
+    body,
+    #root {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      /* Default Light Mode Background */
+      background-color: #F8FAFC;
+      color: #0f172a;
+      antialiased: subpixel-antialiased;
+      overflow: hidden;
+      transition: background-color 0.5s ease, color 0.5s ease;
+    }
+
+    /* Dark Mode Overrides */
+    .dark body {
+      /* Lighter background for better contrast */
+      background-color: #0B1120;
+      color: #e2e8f0;
+      background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E"),
+        radial-gradient(circle at 50% 0%, #1e293b 0%, #0B1120 70%);
+    }
+
+    /* Traveling Pulse Animation for BiologicEdge */
+    @keyframes traveling-pulse {
+      from {
+        stroke-dashoffset: 100;
       }
 
-      body {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        /* Default Light Mode Background */
-        background-color: #F8FAFC; 
-        color: #0f172a;
-        antialiased: subpixel-antialiased;
-        overflow: hidden;
-        transition: background-color 0.5s ease, color 0.5s ease;
+      to {
+        stroke-dashoffset: -100;
       }
+    }
 
-      /* Dark Mode Overrides */
-      .dark body {
-        /* Lighter background for better contrast */
-        background-color: #0B1120; 
-        color: #e2e8f0;
-        background-image: 
-          url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E"),
-          radial-gradient(circle at 50% 0%, #1e293b 0%, #0B1120 70%);
-      }
+    /* Bio Glass Utility - Light Mode */
+    .bio-glass {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    }
 
-      /* Traveling Pulse Animation for BiologicEdge */
-      @keyframes traveling-pulse {
-        from { stroke-dashoffset: 100; }
-        to { stroke-dashoffset: -100; }
-      }
+    /* Bio Glass Utility - Dark Mode */
+    .dark .bio-glass {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    }
 
-      /* Bio Glass Utility - Light Mode */
-      .bio-glass {
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-      }
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
 
-      /* Bio Glass Utility - Dark Mode */
-      .dark .bio-glass {
-        background: rgba(15, 23, 42, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-      }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
 
-      /* Scrollbar */
-      ::-webkit-scrollbar { width: 6px; height: 6px; }
-      ::-webkit-scrollbar-track { background: transparent; }
-      ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-      .dark ::-webkit-scrollbar-track { background: #0B1120; }
-      .dark ::-webkit-scrollbar-thumb { background: #334155; }
-      ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
-      
-      /* Prose Dark Mode Enhancements */
-      .dark .prose strong { color: #e2e8f0; }
-      .dark .prose h1, .dark .prose h2, .dark .prose h3 { color: #f8fafc; }
-      .dark .prose a { color: #818cf8; }
-      .dark .prose ul > li::marker { color: #64748b; }
-    </style>
-  <script type="importmap">
-{
-  "imports": {
-    "lucide-react": "https://esm.sh/lucide-react@0.344.0?external=react",
-    "react": "https://esm.sh/react@18.2.0",
-    "react/": "https://esm.sh/react@18.2.0/",
-    "react-dom": "https://esm.sh/react-dom@18.2.0?external=react",
-    "react-dom/": "https://esm.sh/react-dom@18.2.0/?external=react",
-    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client?external=react",
-    "react-router-dom": "https://esm.sh/react-router-dom@6.22.3?external=react,react-dom,@remix-run/router",
-    "@remix-run/router": "https://esm.sh/@remix-run/router@1.15.3",
-    "recharts": "https://esm.sh/recharts@2.12.2?external=react,react-dom",
-    "framer-motion": "https://esm.sh/framer-motion@10.16.4?external=react,react-dom",
-    "dagre": "https://esm.sh/dagre@0.8.5",
-    "d3-force": "https://esm.sh/d3-force@3.0.0",
-    "@tiptap/core": "https://esm.sh/@tiptap/core@2.2.4?external=react,react-dom,@tiptap/pm",
-    "@tiptap/starter-kit": "https://esm.sh/@tiptap/starter-kit@2.2.4?external=react,react-dom,@tiptap/pm",
-    "@tiptap/extension-placeholder": "https://esm.sh/@tiptap/extension-placeholder@2.2.4?external=@tiptap/pm",
-    "@tiptap/extension-link": "https://esm.sh/@tiptap/extension-link@2.2.4?external=@tiptap/pm",
-    "@tiptap/extension-highlight": "https://esm.sh/@tiptap/extension-highlight@2.2.4?external=react,react-dom,@tiptap/pm",
-    "@tiptap/react": "https://esm.sh/@tiptap/react@2.2.4?external=react,react-dom,@tiptap/pm",
-    "@tiptap/pm/state": "https://esm.sh/@tiptap/pm@2.2.4/state",
-    "@tiptap/pm/view": "https://esm.sh/@tiptap/pm@2.2.4/view",
-    "@tiptap/pm/model": "https://esm.sh/@tiptap/pm@2.2.4/model",
-    "@tiptap/pm/transform": "https://esm.sh/@tiptap/pm@2.2.4/transform",
-    "@tiptap/pm/commands": "https://esm.sh/@tiptap/pm@2.2.4/commands",
-    "@tiptap/pm/history": "https://esm.sh/@tiptap/pm@2.2.4/history",
-    "@tiptap/pm/schema-list": "https://esm.sh/@tiptap/pm@2.2.4/schema-list",
-    "@tiptap/pm/keymap": "https://esm.sh/@tiptap/pm@2.2.4/keymap",
-    "@tiptap/pm/dropcursor": "https://esm.sh/@tiptap/pm@2.2.4/dropcursor",
-    "@tiptap/pm/gapcursor": "https://esm.sh/@tiptap/pm@2.2.4/gapcursor",
-    "reactflow": "https://esm.sh/reactflow@11.10.4?external=react,react-dom",
-    "reactflow/": "https://esm.sh/reactflow@11.10.4/",
-    "zustand": "https://esm.sh/zustand@4.5.2?external=react",
-    "zustand/": "https://esm.sh/zustand@4.5.2/",
-    "zustand/react/shallow": "https://esm.sh/zustand@4.5.2/react/shallow?external=react",
-    "zustand/middleware": "https://esm.sh/zustand@4.5.2/middleware?external=react",
-    "date-fns": "https://esm.sh/date-fns@2.30.0",
-    "@tiptap/extension-underline": "https://esm.sh/@tiptap/extension-underline@2.2.4?external=react,react-dom,@tiptap/pm",
-    "@tiptap/extension-text-align": "https://esm.sh/@tiptap/extension-text-align@2.2.4?external=react,react-dom,@tiptap/pm"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .dark ::-webkit-scrollbar-track {
+      background: #0B1120;
+    }
+
+    .dark ::-webkit-scrollbar-thumb {
+      background: #334155;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #38bdf8;
+    }
+
+    /* Prose Dark Mode Enhancements */
+    .dark .prose strong {
+      color: #e2e8f0;
+    }
+
+    .dark .prose h1,
+    .dark .prose h2,
+    .dark .prose h3 {
+      color: #f8fafc;
+    }
+
+    .dark .prose a {
+      color: #818cf8;
+    }
+
+    .dark .prose ul>li::marker {
+      color: #64748b;
+    }
+  </style>
+
+  <link rel="stylesheet" href="/index.css">
 </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
 </html>
