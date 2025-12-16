@@ -5,11 +5,14 @@ import ReactFlow, {
   NodeTypes,
   EdgeTypes,
   Connection,
+  ConnectionMode,
+  MarkerType,
   useReactFlow,
   ReactFlowProvider,
   NodeMouseHandler,
   PanOnScrollMode,
-  Background
+  Background,
+  OnConnectEnd
 } from 'reactflow';
 import { LayoutTemplate, BrainCircuit, Share2, MousePointerClick } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
@@ -101,7 +104,7 @@ function CanvasContent() {
     }
   }, [activeNodeId, location.pathname, navigate]);
 
-  const { project } = useReactFlow();
+  const { project, screenToFlowPosition } = useReactFlow();
   const [menu, setMenu] = useState<{ nodeIds: string[]; x: number; y: number } | null>(null);
 
   const canvasNodes = React.useMemo(() =>
@@ -137,6 +140,21 @@ function CanvasContent() {
   }, [nodes, isSelectingForReview]);
 
   const onConnectWrapper = useCallback((params: Connection) => onConnect(params), [onConnect]);
+
+  // Drop-to-Create: When connection ends on empty canvas, create a new draft node
+  const onConnectEnd: OnConnectEnd = useCallback((event) => {
+    const target = event.target as HTMLElement;
+    // Only trigger if dropped on the canvas pane (not on a node)
+    if (target.classList.contains('react-flow__pane')) {
+      const mouseEvent = event as MouseEvent;
+      const position = screenToFlowPosition({ x: mouseEvent.clientX, y: mouseEvent.clientY });
+
+      // Create a new draft node at the cursor position
+      // The node will be created with a tentative edge via the store's addNode logic
+      addNode('New Thought', 'text', undefined, 'new');
+      // Note: Full draft/tentative logic with modal requires store updates
+    }
+  }, [screenToFlowPosition, addNode]);
   const onDragOver = useCallback((event: React.DragEvent) => { event.preventDefault(); event.dataTransfer.dropEffect = 'move'; }, []);
   const onDrop = useCallback((event: React.DragEvent) => {
     event.preventDefault();
@@ -217,6 +235,7 @@ function CanvasContent() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnectWrapper}
+        onConnectEnd={onConnectEnd}
         onNodeClick={handleNodeClick}
         onNodeDoubleClick={handleNodeDoubleClick}
         onNodeContextMenu={handleNodeContextMenu}
@@ -225,7 +244,11 @@ function CanvasContent() {
         onDrop={onDrop}
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
-        defaultEdgeOptions={{ type: 'semantic' }}
+        connectionMode={ConnectionMode.Loose}
+        defaultEdgeOptions={{
+          type: 'semantic',
+          markerEnd: { type: MarkerType.ArrowClosed, color: '#9ca3af' }
+        }}
         fitView
         className="z-0 react-flow transition-all duration-700"
         minZoom={0.2}

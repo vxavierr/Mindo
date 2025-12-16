@@ -51,8 +51,48 @@ export const MindNodeComponent = memo((props: NodeProps<MindNodeData>) => {
           </motion.div>
         </AnimatePresence>
 
-        <Handle type="target" position={Position.Top} className="!w-12 !h-2 !bg-mindo-glow !rounded-full !-top-[3px] opacity-0 hover:opacity-100 transition-all duration-300 !border-none shadow-[0_0_15px_#a78bfa] z-50" />
-        <Handle type="source" position={Position.Bottom} className="!w-4 !h-4 !bg-black !border-2 !border-mindo-glow !bottom-[-8px] shadow-[0_0_15px_#a78bfa] transition-all duration-300 hover:scale-125 cursor-crosshair z-50" />
+        {/* 
+          EXTERNAL GRAY BORDER HANDLES
+          - Positioned outside node bounds (-3 offset)
+          - Invisible by default, gray dashed border on hover
+          - Center stays free for dragging
+        */}
+
+        {/* Top handle */}
+        <Handle
+          type="target"
+          position={Position.Top}
+          id="top"
+          className="!absolute !-top-3 !left-0 !w-full !h-3 !bg-transparent !rounded-none !border-0 hover:!border hover:!border-dashed hover:!border-gray-400 !opacity-0 hover:!opacity-100 transition-all duration-200 cursor-crosshair"
+          style={{ transform: 'none' }}
+        />
+
+        {/* Bottom handle */}
+        <Handle
+          type="source"
+          position={Position.Bottom}
+          id="bottom"
+          className="!absolute !-bottom-3 !left-0 !w-full !h-3 !bg-transparent !rounded-none !border-0 hover:!border hover:!border-dashed hover:!border-gray-400 !opacity-0 hover:!opacity-100 transition-all duration-200 cursor-crosshair"
+          style={{ transform: 'none' }}
+        />
+
+        {/* Left handle */}
+        <Handle
+          type="target"
+          position={Position.Left}
+          id="left"
+          className="!absolute !top-0 !-left-3 !w-3 !h-full !bg-transparent !rounded-none !border-0 hover:!border hover:!border-dashed hover:!border-gray-400 !opacity-0 hover:!opacity-100 transition-all duration-200 cursor-crosshair"
+          style={{ transform: 'none' }}
+        />
+
+        {/* Right handle */}
+        <Handle
+          type="source"
+          position={Position.Right}
+          id="right"
+          className="!absolute !top-0 !-right-3 !w-3 !h-full !bg-transparent !rounded-none !border-0 hover:!border hover:!border-dashed hover:!border-gray-400 !opacity-0 hover:!opacity-100 transition-all duration-200 cursor-crosshair"
+          style={{ transform: 'none' }}
+        />
       </div>
     </div>
   );
