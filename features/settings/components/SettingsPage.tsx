@@ -84,7 +84,7 @@ export function SettingsPage() {
                 .eq('id', user?.id);
 
             if (error) throw error;
-            setMessage({ type: 'success', text: 'Profile updated successfully!' });
+            setMessage({ type: 'success', text: 'Perfil atualizado com sucesso!' });
         } catch (error: any) {
             setMessage({ type: 'error', text: error.message });
         } finally {
@@ -109,10 +109,10 @@ export function SettingsPage() {
                     <div>
                         <h1 className="text-3xl font-bold text-slate-800 dark:text-white flex items-center gap-3">
                             <Settings className="w-8 h-8 text-mindo-primary" />
-                            Settings
+                            Configurações
                         </h1>
                         <p className="text-slate-500 dark:text-slate-400 mt-1">
-                            Manage your profile and application preferences
+                            Gerencie seu perfil e preferências do aplicativo
                         </p>
                     </div>
                     <button
@@ -120,7 +120,7 @@ export function SettingsPage() {
                         className="flex items-center gap-2 px-4 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
                     >
                         <LogOut className="w-4 h-4" />
-                        Sign Out
+                        Sair
                     </button>
                 </div>
 
@@ -132,7 +132,7 @@ export function SettingsPage() {
                 >
                     <h2 className="text-xl font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                         <User className="w-5 h-5 text-mindo-primary" />
-                        Profile Information
+                        Informações do Perfil
                     </h2>
 
                     <div className="flex flex-col md:flex-row gap-8">
@@ -148,7 +148,7 @@ export function SettingsPage() {
                                 )}
                             </div>
                             <div className="w-full max-w-xs">
-                                <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1 ml-1">Avatar URL</label>
+                                <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1 ml-1">URL do Avatar</label>
                                 <input
                                     type="text"
                                     value={profile.avatar_url}
@@ -162,13 +162,13 @@ export function SettingsPage() {
                         {/* Form Section */}
                         <div className="flex-1 space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
+                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nome Completo</label>
                                 <input
                                     type="text"
                                     value={profile.full_name}
                                     onChange={(e) => setProfile({ ...profile, full_name: e.target.value })}
                                     className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-black/20 text-slate-800 dark:text-white focus:ring-2 focus:ring-mindo-primary outline-none transition-all"
-                                    placeholder="Your Name"
+                                    placeholder="Seu Nome"
                                 />
                             </div>
 
@@ -181,7 +181,7 @@ export function SettingsPage() {
                                     className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-slate-500 cursor-not-allowed"
                                 />
                                 <p className="text-xs text-slate-400 mt-1 flex items-center gap-1">
-                                    <Shield className="w-3 h-3" /> Managed by Supabase Auth
+                                    <Shield className="w-3 h-3" /> Gerenciado pelo Supabase Auth
                                 </p>
                             </div>
 
@@ -192,7 +192,7 @@ export function SettingsPage() {
                                     className="bg-mindo-primary hover:bg-mindo-primary/90 text-white font-medium px-6 py-2 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50"
                                 >
                                     {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                                    Save Changes
+                                    Salvar Alterações
                                 </button>
                                 {message && (
                                     <span className={`ml-4 text-sm ${message.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
@@ -216,7 +216,7 @@ export function SettingsPage() {
                             <Activity className="w-6 h-6 text-blue-500" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Confidence Score</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">Índice de Confiança</p>
                             <p className="text-2xl font-bold text-slate-800 dark:text-white">{profile.confidence_score}</p>
                         </div>
                     </motion.div>
@@ -231,8 +231,8 @@ export function SettingsPage() {
                             <Zap className="w-6 h-6 text-amber-500" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Day Streak</p>
-                            <p className="text-2xl font-bold text-slate-800 dark:text-white">{profile.streak_days} days</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">Sequência</p>
+                            <p className="text-2xl font-bold text-slate-800 dark:text-white">{profile.streak_days} dias</p>
                         </div>
                     </motion.div>
 
@@ -246,7 +246,7 @@ export function SettingsPage() {
                             <BrainCircuit className="w-6 h-6 text-purple-500" />
                         </div>
                         <div>
-                            <p className="text-sm text-slate-500 dark:text-slate-400">Total Nodes</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400">Total de Neurônios</p>
                             <p className="text-2xl font-bold text-slate-800 dark:text-white">{profile.total_nodes}</p>
                         </div>
                     </motion.div>
@@ -261,7 +261,7 @@ export function SettingsPage() {
                 >
                     <h2 className="text-xl font-semibold text-slate-800 dark:text-white mb-6 flex items-center gap-2">
                         <Settings className="w-5 h-5 text-mindo-primary" />
-                        Preferences
+                        Preferências
                     </h2>
 
                     <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-black/20 border border-slate-100 dark:border-white/5">
@@ -270,9 +270,9 @@ export function SettingsPage() {
                                 {theme === 'dark' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
                             </div>
                             <div>
-                                <p className="font-medium text-slate-800 dark:text-white">Appearance</p>
+                                <p className="font-medium text-slate-800 dark:text-white">Aparência</p>
                                 <p className="text-sm text-slate-500 dark:text-slate-400">
-                                    {theme === 'dark' ? 'Dark Mode is active' : 'Light Mode is active'}
+                                    {theme === 'dark' ? 'Modo Escuro ativado' : 'Modo Claro ativado'}
                                 </p>
                             </div>
                         </div>
@@ -280,7 +280,7 @@ export function SettingsPage() {
                             onClick={toggleTheme}
                             className="px-4 py-2 bg-white dark:bg-white/10 border border-slate-200 dark:border-white/10 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-white/20 transition-colors"
                         >
-                            Toggle Theme
+                            Alternar Tema
                         </button>
                     </div>
                 </motion.div>

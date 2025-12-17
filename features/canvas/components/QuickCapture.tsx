@@ -50,27 +50,27 @@ export function QuickCapture() {
           >
             <form onSubmit={handleSubmit} className="relative group">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-mindo-primary via-mindo-glow to-mindo-primary rounded-2xl opacity-75 blur-md group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt" />
-              
+
               <div className="relative bg-[#0a0a0a] rounded-2xl flex items-center p-2 shadow-2xl ring-1 ring-white/10">
                 <div className="p-4 text-mindo-glow">
                   <Plus size={28} />
                 </div>
-                
+
                 <input
                   ref={inputRef}
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Capture a thought for the inbox..."
+                  placeholder="Capture um pensamento para a caixa de entrada..."
                   className="w-full bg-transparent text-2xl font-medium text-white placeholder-slate-600 focus:outline-none py-4"
                 />
 
                 <div className="pr-4">
                   <span className="hidden md:flex items-center gap-2 text-xs font-mono text-slate-500 border border-white/10 px-2 py-1 rounded">
-                    <span className="text-white">ENTER</span> to save
+                    <span className="text-white">ENTER</span> para salvar
                   </span>
-                  <button 
+                  <button
                     type="submit"
                     className="md:hidden p-2 bg-mindo-primary rounded-lg text-white"
                   >
@@ -79,14 +79,14 @@ export function QuickCapture() {
                 </div>
               </div>
             </form>
-            
-            <motion.p 
+
+            <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
               className="text-center mt-4 text-slate-400 text-sm"
             >
-              Captured thoughts go to the <span className="text-white font-bold">Inbox Dock</span>. Drag them to the canvas to link.
+              Pensamentos capturados vão para a <span className="text-white font-bold">Caixa de Entrada</span>. Arraste-os para o canvas para conectar.
             </motion.p>
           </motion.div>
         </div>

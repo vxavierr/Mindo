@@ -55,7 +55,7 @@ export function NeuralEditor({ nodeId, initialContent, memoryUnits }: NeuralEdit
         },
       }),
       Placeholder.configure({
-        placeholder: 'Start typing... Use @ to mention and link nodes.',
+        placeholder: 'Comece a digitar... Use @ para mencionar e conectar neurônios.',
       }),
       MentionNode,
     ],
@@ -193,8 +193,8 @@ export function NeuralEditor({ nodeId, initialContent, memoryUnits }: NeuralEdit
     editor.chain().focus().setHighlight({ color: '#c084fc4d' }).run();
     addMemoryUnit(nodeId, {
       id: crypto.randomUUID(),
-      question: 'New Concept',
-      answer: 'Define this...',
+      question: 'Novo Conceito',
+      answer: 'Defina isso...',
       textSegment: text,
       status: 'new'
     });
@@ -242,15 +242,15 @@ export function NeuralEditor({ nodeId, initialContent, memoryUnits }: NeuralEdit
       {showMentionPopup && filteredNodes.length > 0 && (
         <div className="fixed z-[9999] bg-white dark:bg-slate-800 rounded-lg shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden min-w-[220px] py-1" style={{ top: '200px', left: '100px' }}>
           <div className="px-3 py-1.5 text-xs text-slate-400 uppercase tracking-wide border-b border-slate-100 dark:border-slate-700">
-            Link to node
+            Conectar ao neurônio
           </div>
           {filteredNodes.map((node, index) => (
             <button
               key={node.id}
               onClick={() => handleSelectMention(node)}
               className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2 transition-colors ${index === selectedIndex
-                  ? 'bg-indigo-50 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50'
+                ? 'bg-indigo-50 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300'
+                : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50'
                 }`}
             >
               <span className="w-5 h-5 rounded bg-slate-200 dark:bg-slate-600 flex items-center justify-center text-xs">📄</span>
@@ -268,13 +268,13 @@ export function NeuralEditor({ nodeId, initialContent, memoryUnits }: NeuralEdit
               <span className="w-6 h-6 rounded bg-indigo-100 dark:bg-indigo-500/20 flex items-center justify-center text-sm">📄</span>
               <span className="font-medium text-slate-800 dark:text-slate-200 truncate">{pendingMention.data.label}</span>
             </div>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">Why are you connecting to this node?</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">Por que você está conectando a este neurônio?</p>
             <input
               ref={reasonInputRef}
               type="text"
               value={mentionReason}
               onChange={(e) => setMentionReason(e.target.value)}
-              placeholder="e.g. Related concept, Example, Evidence..."
+              placeholder="ex: Conceito relacionado, Exemplo, Evidência..."
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') confirmMention();
@@ -282,8 +282,8 @@ export function NeuralEditor({ nodeId, initialContent, memoryUnits }: NeuralEdit
               }}
             />
             <div className="flex justify-end gap-2">
-              <button onClick={cancelMention} className="px-4 py-2 text-sm text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md transition-colors">Cancel</button>
-              <button onClick={confirmMention} disabled={!mentionReason.trim()} className="px-4 py-2 text-sm bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Connect</button>
+              <button onClick={cancelMention} className="px-4 py-2 text-sm text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md transition-colors">Cancelar</button>
+              <button onClick={confirmMention} disabled={!mentionReason.trim()} className="px-4 py-2 text-sm bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Conectar</button>
             </div>
           </div>
         </div>
@@ -316,7 +316,7 @@ export function NeuralEditor({ nodeId, initialContent, memoryUnits }: NeuralEdit
               </>
             ) : (
               <div className="flex items-center gap-2 animate-fade-in">
-                <input id="link-reason-input" type="text" value={linkReason} onChange={(e) => setLinkReason(e.target.value)} placeholder="Why is this connected?" className="bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-md px-2 py-1 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 w-48" onKeyDown={(e) => e.key === 'Enter' && confirmRefactor()} />
+                <input id="link-reason-input" type="text" value={linkReason} onChange={(e) => setLinkReason(e.target.value)} placeholder="Por que esta conexão?" className="bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-md px-2 py-1 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 w-48" onKeyDown={(e) => e.key === 'Enter' && confirmRefactor()} />
                 <button onClick={confirmRefactor} className="p-1 rounded-full bg-green-500 text-white hover:bg-green-600"><Check size={14} /></button>
                 <button onClick={cancelRefactor} className="p-1 rounded-full bg-slate-200 dark:bg-white/10 text-slate-500 hover:bg-slate-300 dark:hover:bg-white/20"><XIcon size={14} /></button>
               </div>

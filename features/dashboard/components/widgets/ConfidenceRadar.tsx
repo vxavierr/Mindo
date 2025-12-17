@@ -23,7 +23,7 @@ export function ConfidenceRadar({ data, score, obesityLevel, theme }: Confidence
           <div>
             <h3 className="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
               <Target className="text-indigo-500 dark:text-mindo-glow" size={18} />
-              Confidence
+              Confiança
             </h3>
             <div className="text-3xl font-black text-slate-800 dark:text-white mt-1">
               {score}
@@ -43,7 +43,7 @@ export function ConfidenceRadar({ data, score, obesityLevel, theme }: Confidence
                 tick={{ fill: '#94a3b8', fontSize: 10, fontFamily: 'monospace' }}
               />
               <Radar
-                name="Current State"
+                name="Estado Atual"
                 dataKey="A"
                 stroke="#a78bfa"
                 strokeWidth={2}

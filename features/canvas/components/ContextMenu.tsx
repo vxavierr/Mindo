@@ -22,7 +22,7 @@ export function ContextMenu({ x, y, nodeIds, onDelete, onEdit, onRename, onAddCh
       onClick={(e) => e.stopPropagation()}
     >
       <div className="px-3 py-2 text-xs font-bold text-slate-500 uppercase tracking-widest border-b border-white/5 mb-1">
-        {isMulti ? `${nodeIds.length} Nodes Selected` : 'Node Actions'}
+        {isMulti ? `${nodeIds.length} Neurônios Selecionados` : 'Ações do Neurônio'}
       </div>
 
       {!isMulti && (
@@ -32,7 +32,7 @@ export function ContextMenu({ x, y, nodeIds, onDelete, onEdit, onRename, onAddCh
             className="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors text-left"
           >
             <Edit size={16} className="text-mindo-glow" />
-            <span>Open Editor</span>
+            <span>Abrir Editor</span>
           </button>
 
           <button
@@ -40,7 +40,7 @@ export function ContextMenu({ x, y, nodeIds, onDelete, onEdit, onRename, onAddCh
             className="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors text-left"
           >
             <Type size={16} className="text-mindo-accent" />
-            <span>Quick Rename</span>
+            <span>Renomear</span>
           </button>
 
           <button
@@ -48,7 +48,7 @@ export function ContextMenu({ x, y, nodeIds, onDelete, onEdit, onRename, onAddCh
             className="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors text-left"
           >
             <Network size={16} className="text-green-400" />
-            <span>Add Child Node</span>
+            <span>Adicionar Neurônio Filho</span>
           </button>
 
           <div className="h-px bg-white/10 my-1 mx-2" />
@@ -60,7 +60,7 @@ export function ContextMenu({ x, y, nodeIds, onDelete, onEdit, onRename, onAddCh
         className="flex items-center gap-3 px-3 py-2.5 text-sm text-red-400 hover:text-white hover:bg-red-500/20 rounded-lg transition-colors text-left"
       >
         <Trash2 size={16} />
-        <span>{isMulti ? `Delete ${nodeIds.length} Neurons` : 'Delete Neuron'}</span>
+        <span>{isMulti ? `Excluir ${nodeIds.length} Neurônios` : 'Excluir Neurônio'}</span>
       </button>
     </div>
   );

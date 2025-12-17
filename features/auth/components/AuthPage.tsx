@@ -36,7 +36,7 @@ export function AuthPage() {
                     }
                 });
                 if (error) throw error;
-                setMessage({ type: 'success', text: 'Check your email for the confirmation link!' });
+                setMessage({ type: 'success', text: 'Verifique seu e-mail para o link de confirmação!' });
             } else {
                 const { error } = await supabase.auth.signInWithPassword({
                     email,
@@ -66,29 +66,29 @@ export function AuthPage() {
                     </div>
 
                     <h2 className="text-2xl font-bold text-center text-slate-800 dark:text-white mb-2">
-                        {isSignUp ? 'Create your account' : 'Welcome back'}
+                        {isSignUp ? 'Crie sua conta' : 'Bem-vindo de volta'}
                     </h2>
                     <p className="text-center text-slate-500 dark:text-slate-400 mb-8">
-                        {isSignUp ? 'Start building your second brain' : 'Enter your credentials to access your graph'}
+                        {isSignUp ? 'Comece a construir seu segundo cérebro' : 'Insira suas credenciais para acessar seu grafo'}
                     </p>
 
                     <form onSubmit={handleEmailAuth} className="space-y-4">
                         {isSignUp && (
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Full Name</label>
+                                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nome Completo</label>
                                 <input
                                     type="text"
                                     required
                                     value={fullName}
                                     onChange={(e) => setFullName(e.target.value)}
                                     className="w-full px-4 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-black/20 text-slate-800 dark:text-white focus:ring-2 focus:ring-mindo-primary focus:border-transparent outline-none transition-all"
-                                    placeholder="John Doe"
+                                    placeholder="Seu Nome"
                                 />
                             </div>
                         )}
 
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Email</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">E-mail</label>
                             <div className="relative">
                                 <Mail className="absolute left-3 top-2.5 text-slate-400 w-5 h-5" />
                                 <input
@@ -97,13 +97,13 @@ export function AuthPage() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="w-full pl-10 pr-4 py-2 rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-black/20 text-slate-800 dark:text-white focus:ring-2 focus:ring-mindo-primary focus:border-transparent outline-none transition-all"
-                                    placeholder="you@example.com"
+                                    placeholder="voce@exemplo.com"
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Password</label>
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Senha</label>
                             <div className="relative">
                                 <Lock className="absolute left-3 top-2.5 text-slate-400 w-5 h-5" />
                                 <input
@@ -128,7 +128,7 @@ export function AuthPage() {
                             disabled={loading}
                             className="w-full bg-mindo-primary hover:bg-mindo-primary/90 text-white font-bold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
                         >
-                            {loading ? <Loader2 className="animate-spin w-5 h-5" /> : (isSignUp ? 'Sign Up' : 'Sign In')}
+                            {loading ? <Loader2 className="animate-spin w-5 h-5" /> : (isSignUp ? 'Criar Conta' : 'Entrar')}
                             {!loading && <ArrowRight className="w-4 h-4" />}
                         </button>
                     </form>
@@ -139,7 +139,7 @@ export function AuthPage() {
                                 <div className="w-full border-t border-slate-200 dark:border-white/10"></div>
                             </div>
                             <div className="relative flex justify-center text-sm">
-                                <span className="px-2 bg-white dark:bg-mindo-depth text-slate-500">Or continue with</span>
+                                <span className="px-2 bg-white dark:bg-mindo-depth text-slate-500">Ou continue com</span>
                             </div>
                         </div>
 
@@ -170,12 +170,12 @@ export function AuthPage() {
                     </div>
 
                     <p className="mt-8 text-center text-sm text-slate-500">
-                        {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
+                        {isSignUp ? 'Já tem uma conta?' : 'Não tem uma conta?'}{' '}
                         <button
                             onClick={() => setIsSignUp(!isSignUp)}
                             className="font-medium text-mindo-primary hover:text-mindo-primary/80 transition-colors"
                         >
-                            {isSignUp ? 'Sign in' : 'Sign up'}
+                            {isSignUp ? 'Entrar' : 'Criar conta'}
                         </button>
                     </p>
                 </div>

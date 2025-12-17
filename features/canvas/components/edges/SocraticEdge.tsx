@@ -97,7 +97,7 @@ export function SocraticEdge({
                   onChange={(e) => setLabel(e.target.value)}
                   onKeyDown={handleKeyDown}
                   onBlur={handleBlur}
-                  placeholder="Why this connection?"
+                  placeholder="Por que esta conexão?"
                   className="bg-transparent text-xs text-white placeholder-slate-500 outline-none w-40 font-mono"
                 />
                 <span className="text-[10px] text-slate-600 px-1 ml-1 border border-white/10 rounded">⏎</span>

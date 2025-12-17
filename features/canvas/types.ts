@@ -10,7 +10,7 @@ export interface BaseEntity {
 }
 
 export type NodeStatus = 'new' | 'learning' | 'review_due' | 'mastered' | 'inbox';
-export type NodeType = 'text' | 'audio';
+export type NodeType = 'text' | 'code' | 'video' | 'image' | 'pdf';
 
 export interface MemoryUnit {
   id: string;
@@ -23,21 +23,25 @@ export interface MemoryUnit {
 // DTO: The shape of a Node in the Database (Supabase)
 export interface NodeDTO extends BaseEntity {
   title: string;
-  content: string;
+  content?: string;  // Legacy column, now uses data.content
   type: NodeType;
   status: NodeStatus;
   tags: string[];
 
-  // Visual State
-  position_x: number;
-  position_y: number;
+  // Visual State - Legacy columns (for migration support)
+  position_x?: number;
+  position_y?: number;
+
+  // NEW: JSONB columns for polymorphic architecture
+  position?: { x: number; y: number };  // JSONB position
+  data?: Record<string, unknown>;       // JSONB polymorphic data
 
   // SRS / Meta
   last_review: string | null;
   next_review: string | null;
   weight: number;
 
-  memory_units: MemoryUnit[];
+  memory_units?: MemoryUnit[];
 }
 
 // --- Application Types (React Flow & UI) ---
@@ -52,9 +56,14 @@ export interface MindNodeData {
   memoryUnits?: MemoryUnit[];
   weight?: number;
 
+  // Polymorphic Fields (JSONB in DB)
+  url?: string;          // For video, image, pdf nodes
+  code?: string;         // For code nodes
+  language?: string;     // For code nodes (e.g., 'javascript', 'python')
+
   // Audit (New fields)
-  user_id?: string; // Optional for now to avoid breaking everything immediately
-  created_at?: string; // Made optional to ease migration, but goal is required
+  user_id?: string;
+  created_at?: string;
   updated_at?: string;
 
   // SRS
@@ -74,6 +83,8 @@ export interface EdgeDTO extends BaseEntity {
   type: EdgeType;
   label: string | null;
   is_tentative: boolean;
+  source_handle?: string | null;
+  target_handle?: string | null;
 }
 
 export interface EdgeData {

@@ -11,9 +11,9 @@ export function StatsGrid() {
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
       <AnimatedCard>
         <StatCard
-          label="Streak"
+          label="Sequência"
           value={metrics.streakDays}
-          unit="days"
+          unit="dias"
           icon={TrendingUp}
           trend={1}
           color="green"
@@ -21,7 +21,7 @@ export function StatsGrid() {
       </AnimatedCard>
       <AnimatedCard>
         <StatCard
-          label="Neurons"
+          label="Neurônios"
           value={metrics.totalNodes}
           unit=""
           icon={BrainCircuit}
@@ -30,7 +30,7 @@ export function StatsGrid() {
       </AnimatedCard>
       <AnimatedCard>
         <StatCard
-          label="Links"
+          label="Conexões"
           value={metrics.totalConnections}
           unit=""
           icon={Share2}

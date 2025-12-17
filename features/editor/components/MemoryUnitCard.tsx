@@ -29,17 +29,17 @@ export const MemoryUnitCard: React.FC<MemoryUnitCardProps> = ({ unit, nodeId }) 
                     value={q}
                     onChange={e => setQ(e.target.value)}
                     className="w-full text-sm font-bold bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/10 rounded px-2 py-1 outline-none focus:border-indigo-500"
-                    placeholder="Question..."
+                    placeholder="Pergunta..."
                     autoFocus
                 />
                 <textarea
                     value={a}
                     onChange={e => setA(e.target.value)}
                     className="w-full text-xs bg-slate-50 dark:bg-black/20 border border-slate-200 dark:border-white/10 rounded px-2 py-1 outline-none focus:border-indigo-500 resize-none h-16"
-                    placeholder="Answer..."
+                    placeholder="Resposta..."
                 />
                 <div className="flex justify-end gap-2">
-                    <button onClick={() => setIsEditing(false)} className="text-[10px] text-slate-500 hover:text-slate-800">Cancel</button>
+                    <button onClick={() => setIsEditing(false)} className="text-[10px] text-slate-500 hover:text-slate-800">Cancelar</button>
                     <button onClick={handleSave} className="bg-indigo-600 text-white p-1 rounded hover:bg-indigo-700"><Check size={12} /></button>
                 </div>
             </div>
@@ -51,8 +51,8 @@ export const MemoryUnitCard: React.FC<MemoryUnitCardProps> = ({ unit, nodeId }) 
             onMouseEnter={() => setHoveredUnitId(unit.id)}
             onMouseLeave={() => setHoveredUnitId(null)}
             className={`p-3 rounded-lg border transition-all cursor-pointer group relative ${hoveredUnitId === unit.id
-                    ? 'bg-white dark:bg-mindo-primary/10 border-indigo-500 dark:border-mindo-glow shadow-md translate-x-1'
-                    : 'bg-white dark:bg-white/5 border-slate-200 dark:border-white/5 hover:border-indigo-300 dark:hover:border-white/20'
+                ? 'bg-white dark:bg-mindo-primary/10 border-indigo-500 dark:border-mindo-glow shadow-md translate-x-1'
+                : 'bg-white dark:bg-white/5 border-slate-200 dark:border-white/5 hover:border-indigo-300 dark:hover:border-white/20'
                 }`}
         >
             <button

@@ -12,24 +12,24 @@ import { useMindoStore } from '../../../store/useMindoStore';
 
 export function DashboardPage() {
   const { calculateObesity, getRadarData, metrics, theme } = useMindoStore();
-  
+
   const obesityLevel = calculateObesity();
   const radarData = getRadarData();
 
   return (
     <PageWrapper className="!p-6 h-full flex flex-col overflow-hidden">
-      
+
       <DashboardHeader />
 
       <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 min-h-0">
         <div className="md:col-span-4 flex flex-col gap-4 min-h-0">
           <AnimatedCard className="flex-1 min-h-[300px]">
-             <ConfidenceRadar 
-                data={radarData}
-                score={metrics.confidenceScore}
-                obesityLevel={obesityLevel}
-                theme={theme}
-             />
+            <ConfidenceRadar
+              data={radarData}
+              score={metrics.confidenceScore}
+              obesityLevel={obesityLevel}
+              theme={theme}
+            />
           </AnimatedCard>
 
           <AnimatedCard className="h-auto">
@@ -37,7 +37,7 @@ export function DashboardPage() {
               <div className="flex justify-between items-center mb-3">
                 <h3 className="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
                   <Activity className="text-indigo-500 dark:text-mindo-accent" size={16} />
-                  Rhythm
+                  Ritmo
                 </h3>
               </div>
               <HeatmapBlock />

@@ -6,10 +6,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 export function InboxDock() {
   const { nodes, deleteNode } = useMindoStore();
   const scrollRef = useRef<HTMLDivElement>(null);
-  
-  const inboxNodes = useMemo(() => 
-    nodes.filter(n => n.data.status === 'inbox'), 
-  [nodes]);
+
+  const inboxNodes = useMemo(() =>
+    nodes.filter(n => n.data.status === 'inbox'),
+    [nodes]);
 
   const onDragStart = (event: React.DragEvent, nodeId: string) => {
     event.dataTransfer.setData('application/reactflow', nodeId);
@@ -26,11 +26,11 @@ export function InboxDock() {
       <div className="pointer-events-auto bg-black/60 backdrop-blur-xl border border-white/10 p-3 rounded-xl mb-4 flex items-center gap-2 shadow-lg select-none">
         <Inbox size={16} className="text-mindo-glow" />
         <span className="text-xs font-bold uppercase tracking-widest text-slate-300">
-          Inbox ({inboxNodes.length})
+          Entrada ({inboxNodes.length})
         </span>
       </div>
 
-      <div 
+      <div
         ref={scrollRef}
         className={`
             w-full flex flex-col space-y-3 pb-12 overflow-y-auto pr-2 pl-14
@@ -38,9 +38,9 @@ export function InboxDock() {
             ${inboxNodes.length > 0 ? 'pointer-events-auto' : 'pointer-events-none'}
         `}
         style={{
-            maxHeight: 'calc(100vh - 25rem)', 
-            maskImage: 'linear-gradient(to bottom, black 0%, black 85%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 85%, transparent 100%)'
+          maxHeight: 'calc(100vh - 25rem)',
+          maskImage: 'linear-gradient(to bottom, black 0%, black 85%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 85%, transparent 100%)'
         }}
       >
         <AnimatePresence mode='popLayout'>
@@ -61,7 +61,7 @@ export function InboxDock() {
                            p-2 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white 
                            rounded-full opacity-0 group-hover:opacity-100 
                            transition-all duration-200 shadow-sm border border-red-500/20 pointer-events-auto z-20"
-                title="Delete from Inbox"
+                title="Remover da Entrada"
               >
                 <Trash2 size={14} />
               </button>
@@ -74,7 +74,7 @@ export function InboxDock() {
                       {node.data.label}
                     </p>
                     <span className="text-[10px] text-slate-500 mt-1 block font-mono">
-                      Drag to plant
+                      Arraste para plantar
                     </span>
                   </div>
                 </div>
@@ -82,12 +82,12 @@ export function InboxDock() {
             </motion.div>
           ))}
         </AnimatePresence>
-        
+
         {inboxNodes.length === 0 && (
-           <div className="w-full text-center p-6 border-2 border-dashed border-white/5 rounded-2xl text-slate-600 text-xs select-none pointer-events-none ml-[-20px]">
-             No floating thoughts.<br/>
-             Press <span className="font-bold text-slate-400">Cmd+K</span> to capture.
-           </div>
+          <div className="w-full text-center p-6 border-2 border-dashed border-white/5 rounded-2xl text-slate-600 text-xs select-none pointer-events-none ml-[-20px]">
+            Nenhum pensamento flutuante.<br />
+            Pressione <span className="font-bold text-slate-400">Cmd+K</span> para capturar.
+          </div>
         )}
       </div>
     </div>

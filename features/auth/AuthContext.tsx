@@ -26,21 +26,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        console.log('[Auth] Checking session...');
+
+        // Timeout fallback in case Supabase is unreachable
+        const timeout = setTimeout(() => {
+            console.warn('[Auth] Supabase connection timeout - continuing without auth');
+            setLoading(false);
+        }, 10000); // 10 second timeout
+
         // Check active sessions and sets the user
         supabase.auth.getSession().then(({ data: { session } }) => {
+            clearTimeout(timeout);
+            console.log('[Auth] Session result:', session ? 'User logged in' : 'No session');
             setSession(session);
             setUser(session?.user ?? null);
+            setLoading(false);
+        }).catch(err => {
+            clearTimeout(timeout);
+            console.error('[Auth] getSession error:', err);
             setLoading(false);
         });
 
         // Listen for changes on auth state (logged in, signed out, etc.)
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            console.log('[Auth] State changed:', _event);
             setSession(session);
             setUser(session?.user ?? null);
             setLoading(false);
         });
 
-        return () => subscription.unsubscribe();
+        return () => {
+            clearTimeout(timeout);
+            subscription.unsubscribe();
+        };
     }, []);
 
     const signInWithGoogle = async () => {

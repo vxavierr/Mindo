@@ -6,13 +6,13 @@ import { useMindoStore } from '../../../../store/useMindoStore';
 import { GlassCard } from '../../../../components/ui/GlassCard';
 
 const activityData = [
-  { day: 'Mon', hours: 2.5 },
-  { day: 'Tue', hours: 1.0 },
-  { day: 'Wed', hours: 0.0 },
-  { day: 'Thu', hours: 3.2 },
-  { day: 'Fri', hours: 1.5 },
-  { day: 'Sat', hours: 4.0 },
-  { day: 'Sun', hours: 2.0 },
+  { day: 'Seg', hours: 2.5 },
+  { day: 'Ter', hours: 1.0 },
+  { day: 'Qua', hours: 0.0 },
+  { day: 'Qui', hours: 3.2 },
+  { day: 'Sex', hours: 1.5 },
+  { day: 'Sáb', hours: 4.0 },
+  { day: 'Dom', hours: 2.0 },
 ];
 
 export function ActivityChart() {
@@ -22,7 +22,7 @@ export function ActivityChart() {
     <GlassCard className="p-6 h-full">
       <div className="flex flex-col h-full min-h-[200px]">
         <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-4">
-          Activity Output
+          Produção de Atividade
         </h3>
         <div className="flex-1 w-full min-h-0">
           <ResponsiveContainer width="100%" height="100%">
@@ -43,7 +43,7 @@ export function ActivityChart() {
                   color: theme === 'dark' ? '#fff' : '#0f172a',
                   boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
                 }}
-                formatter={(value: number) => [`${value}h`, 'Time']}
+                formatter={(value: number) => [`${value}h`, 'Tempo']}
               />
               <Bar
                 dataKey="hours"
