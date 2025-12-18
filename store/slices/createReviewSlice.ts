@@ -1,98 +1,118 @@
 import { StateCreator } from 'zustand';
 import { MindoState } from '../useMindoStore';
-import { 
-  ReviewSession, 
-  ReviewMode, 
-  ReviewGrade, 
-  UserMetrics, 
-  ObesityLevel, 
-  RadarDataPoint 
+import {
+   ReviewSession,
+   ReviewMode,
+   ReviewGrade,
+   UserMetrics,
+   ObesityLevel,
+   RadarDataPoint
 } from '../../types';
 import { initialMetrics } from '../../data/initialGraph';
 
 export interface ReviewSlice {
-  // Review Session State
-  reviewSession: ReviewSession | null;
-  metrics: UserMetrics;
-  
-  // Selection State
-  isSelectingForReview: boolean;
-  selectionDraft: string[];
+   // Review Session State
+   reviewSession: ReviewSession | null;
+   metrics: UserMetrics;
 
-  // Feynman
-  isFeynmanModalOpen: boolean;
-  feynmanTargetNodeId: string | null;
+   // Selection State
+   isSelectingForReview: boolean;
+   selectionDraft: string[];
 
-  // Actions
-  attemptNodeMastery: (nodeId: string) => void;
-  confirmNodeMastery: (nodeId: string, explanation: string) => void;
-  cancelNodeMastery: () => void;
+   // Feynman
+   isFeynmanModalOpen: boolean;
+   feynmanTargetNodeId: string | null;
 
-  startReviewSelection: () => void;
-  toggleSelectionDraft: (nodeId: string) => void;
-  confirmReviewSelection: () => void;
-  cancelReviewSelection: () => void;
+   // Actions
+   attemptNodeMastery: (nodeId: string) => void;
+   confirmNodeMastery: (nodeId: string, explanation: string) => void;
+   cancelNodeMastery: () => void;
 
-  startReviewSession: (mode: ReviewMode, tags?: string[], nodeIds?: string[]) => void;
-  startPathReview: () => void;
-  submitReviewGrade: (nodeId: string, grade: ReviewGrade) => void;
-  nextReviewQuestion: () => void;
-  prevReviewQuestion: () => void;
-  endReviewSession: () => void;
+   startReviewSelection: () => void;
+   toggleSelectionDraft: (nodeId: string) => void;
+   confirmReviewSelection: () => void;
+   cancelReviewSelection: () => void;
 
-  updateMetrics: (newMetrics: Partial<UserMetrics>) => void;
-  calculateObesity: () => ObesityLevel;
-  getRadarData: () => RadarDataPoint[];
+   startReviewSession: (mode: ReviewMode, tags?: string[], nodeIds?: string[]) => void;
+   startPathReview: () => void;
+   submitReviewGrade: (nodeId: string, grade: ReviewGrade) => void;
+   nextReviewQuestion: () => void;
+   prevReviewQuestion: () => void;
+   endReviewSession: () => void;
+
+   updateMetrics: (newMetrics: Partial<UserMetrics>) => void;
+   calculateObesity: () => ObesityLevel;
+   getRadarData: () => RadarDataPoint[];
 }
 
 export const createReviewSlice: StateCreator<MindoState, [], [], ReviewSlice> = (set, get) => ({
-  reviewSession: null,
-  metrics: initialMetrics,
-  isSelectingForReview: false,
-  selectionDraft: [],
-  isFeynmanModalOpen: false,
-  feynmanTargetNodeId: null,
+   reviewSession: null,
+   metrics: initialMetrics,
+   isSelectingForReview: false,
+   selectionDraft: [],
+   isFeynmanModalOpen: false,
+   feynmanTargetNodeId: null,
 
-  attemptNodeMastery: (id) => set({ isFeynmanModalOpen: true, feynmanTargetNodeId: id }),
-  cancelNodeMastery: () => set({ isFeynmanModalOpen: false }),
-  
-  confirmNodeMastery: (id, text) => {
-     set(state => ({
+   attemptNodeMastery: (id) => set({ isFeynmanModalOpen: true, feynmanTargetNodeId: id }),
+   cancelNodeMastery: () => set({ isFeynmanModalOpen: false }),
+
+   confirmNodeMastery: (id, text) => {
+      set(state => ({
          isFeynmanModalOpen: false,
-         nodes: state.nodes.map(n => n.id === id ? { ...n, data: { ...n.data, status: 'mastered' }} : n)
-     }));
-  },
+         nodes: state.nodes.map(n => n.id === id ? { ...n, data: { ...n.data, status: 'mastered' } } : n)
+      }));
+   },
 
-  startReviewSelection: () => set({ isSelectingForReview: true, selectionDraft: [] }),
-  toggleSelectionDraft: (nodeId) => set(state => {
-     const exists = state.selectionDraft.includes(nodeId);
-     return {
-         selectionDraft: exists 
-           ? state.selectionDraft.filter(id => id !== nodeId)
-           : [...state.selectionDraft, nodeId]
-     };
-  }),
-  confirmReviewSelection: () => {
-     const { selectionDraft } = get();
-     if (selectionDraft.length > 0) {
-        get().startReviewSession('custom_cluster', undefined, selectionDraft);
-     }
-     set({ isSelectingForReview: false, selectionDraft: [] });
-  },
-  cancelReviewSelection: () => set({ isSelectingForReview: false, selectionDraft: [] }),
+   startReviewSelection: () => set({ isSelectingForReview: true, selectionDraft: [] }),
+   toggleSelectionDraft: (nodeId) => set(state => {
+      const exists = state.selectionDraft.includes(nodeId);
+      return {
+         selectionDraft: exists
+            ? state.selectionDraft.filter(id => id !== nodeId)
+            : [...state.selectionDraft, nodeId]
+      };
+   }),
+   confirmReviewSelection: () => {
+      const { selectionDraft } = get();
+      if (selectionDraft.length > 0) {
+         get().startReviewSession('custom_cluster', undefined, selectionDraft);
+      }
+      set({ isSelectingForReview: false, selectionDraft: [] });
+   },
+   cancelReviewSelection: () => set({ isSelectingForReview: false, selectionDraft: [] }),
 
-  // Placeholders for complex review logic - in a real app these would be populated
-  startReviewSession: (mode, tags, nodeIds) => { 
+   // Placeholders for complex review logic - in a real app these would be populated
+   startReviewSession: (mode, tags, nodeIds) => {
       // Simplified mock start
       console.log('Starting Review:', mode, tags, nodeIds);
-  },
-  startPathReview: () => { },
-  submitReviewGrade: (nodeId, grade) => { },
-  nextReviewQuestion: () => { },
-  prevReviewQuestion: () => { },
-  endReviewSession: () => set({ reviewSession: null }),
+   },
+   startPathReview: () => { },
+   submitReviewGrade: (nodeId, grade) => { },
+   nextReviewQuestion: () => { },
+   prevReviewQuestion: () => { },
+   endReviewSession: () => set({ reviewSession: null }),
 
-  updateMetrics: (m) => set(s => ({ metrics: { ...s.metrics, ...m } })),
-  calculateObesity: () => 'healthy',
-  getRadarData: () => []
+   updateMetrics: (m) => set(s => ({ metrics: { ...s.metrics, ...m } })),
+
+   calculateObesity: () => {
+      const { metrics } = get();
+      // Calculate based on balance of metrics
+      const entropy = metrics.knowledgeEntropy;
+      if (entropy > 50) return 'critical';
+      if (entropy > 25) return 'warning';
+      return 'healthy';
+   },
+
+   getRadarData: () => {
+      const { metrics } = get();
+      // Generate radar data from actual metrics
+      return [
+         { subject: 'Confiança', A: Math.min(metrics.confidenceScore, 100), fullMark: 100 },
+         { subject: 'Retenção', A: Math.max(0, 100 - metrics.knowledgeEntropy * 2), fullMark: 100 },
+         { subject: 'Velocidade', A: Math.min(metrics.synapticVelocity * 30, 100), fullMark: 100 },
+         { subject: 'Consistência', A: Math.min(metrics.streakDays * 10, 100), fullMark: 100 },
+         { subject: 'Conexões', A: Math.min((metrics.totalConnections / metrics.totalNodes) * 50, 100), fullMark: 100 },
+         { subject: 'Dedicação', A: Math.min(metrics.hoursThisWeek * 5, 100), fullMark: 100 },
+      ];
+   }
 });

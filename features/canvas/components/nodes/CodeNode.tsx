@@ -39,7 +39,14 @@ export const CodeNode = memo((props: NodeProps<MindNodeData>) => {
     };
 
     return (
-        <NeuralNodeWrapper id={id} selected={selected ?? false}>
+        <NeuralNodeWrapper
+            id={id}
+            selected={selected ?? false}
+            label={data.label || 'Snippet'}
+            nodeType={data.type}
+            width={(props as any).width || 280}
+            height={(props as any).height || 150}
+        >
             <div className="p-3">
                 {/* Header with language badge */}
                 <div className="flex items-center justify-between mb-2">

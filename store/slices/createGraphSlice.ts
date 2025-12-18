@@ -23,41 +23,70 @@ const STORAGE_BUCKET = 'mindo-assets';
 
 /**
  * Helper: Extract file path from Supabase Storage URL and delete the file
- * URL format: https://xxx.supabase.co/storage/v1/object/public/mindo-assets/images/file.jpg
+ * Uses robust URL parsing to handle encoded characters and folder structure
+ * URL format: https://xxx.supabase.co/storage/v1/object/public/mindo-assets/videos/my-file.mp4
  */
 async function deleteFileFromStorage(url: string): Promise<void> {
   try {
-    // Extract path after bucket name
-    const bucketMarker = `${STORAGE_BUCKET}/`;
-    const bucketIndex = url.indexOf(bucketMarker);
-
-    if (bucketIndex === -1) {
-      console.warn('[deleteFileFromStorage] URL does not contain bucket path:', url);
+    // Validate URL
+    if (!url || typeof url !== 'string') {
+      console.warn('[deleteFileFromStorage] Invalid URL:', url);
       return;
     }
 
-    // Get the file path (e.g., "images/file-123.jpg")
-    const filePath = url.substring(bucketIndex + bucketMarker.length);
-
-    if (!filePath) {
-      console.warn('[deleteFileFromStorage] Could not extract file path from URL');
+    // Check if it's a Supabase Storage URL
+    if (!url.includes('storage/v1/object')) {
+      console.log('[deleteFileFromStorage] Not a Supabase Storage URL, skipping:', url);
       return;
     }
 
-    console.log('[deleteFileFromStorage] Deleting:', filePath);
+    // Parse URL robustly using URL API
+    let relativePath: string | null = null;
+    try {
+      const urlObj = new URL(url);
+      // Split by the bucket name to get the relative path inside the bucket
+      const pathParts = urlObj.pathname.split(`/${STORAGE_BUCKET}/`);
 
-    const { error } = await supabase.storage
+      if (pathParts.length > 1) {
+        // Decode URI components to handle spaces and special characters
+        relativePath = decodeURIComponent(pathParts[1]);
+      }
+    } catch (parseError) {
+      console.warn('[deleteFileFromStorage] URL parsing failed, trying fallback:', parseError);
+
+      // Fallback: simple string split
+      const bucketMarker = `${STORAGE_BUCKET}/`;
+      const bucketIndex = url.indexOf(bucketMarker);
+      if (bucketIndex !== -1) {
+        relativePath = decodeURIComponent(url.substring(bucketIndex + bucketMarker.length));
+      }
+    }
+
+    if (!relativePath || relativePath.length === 0) {
+      console.warn('[deleteFileFromStorage] Could not extract file path from URL:', url);
+      return;
+    }
+
+    console.log('[deleteFileFromStorage] Attempting to delete:', {
+      bucket: STORAGE_BUCKET,
+      path: relativePath,
+      originalUrl: url
+    });
+
+    const { data, error } = await supabase.storage
       .from(STORAGE_BUCKET)
-      .remove([filePath]);
+      .remove([relativePath]);
 
     if (error) {
-      throw error;
+      console.error('[deleteFileFromStorage] Supabase error:', error);
+      // Don't throw - log and continue
+      return;
     }
 
-    console.log('[deleteFileFromStorage] Successfully deleted:', filePath);
+    console.log('[deleteFileFromStorage] Successfully deleted:', relativePath, 'Response:', data);
   } catch (err) {
-    console.error('[deleteFileFromStorage] Error:', err);
-    throw err;
+    console.error('[deleteFileFromStorage] Unexpected error:', err);
+    // Silent fail - file cleanup is best-effort, don't block node deletion
   }
 }
 

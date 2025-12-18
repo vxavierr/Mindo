@@ -1,31 +1,49 @@
 import React, { memo } from 'react';
-import { motion } from 'framer-motion';
-import { MindNodeData } from '../../types';
-import { getNodeStyle } from '../../../../utils/styleMap';
+import { NodeType } from '../../types';
 
-interface NodeLODBlobProps {
-  data: MindNodeData;
-  selected: boolean;
+export interface NodeLODBlobProps {
+  type: NodeType;
 }
 
-export const NodeLODBlob = memo(({ data, selected }: NodeLODBlobProps) => {
-  const styles = getNodeStyle(data.status);
+/**
+ * Color mapping for blob nodes by type
+ */
+const BLOB_COLORS: Record<NodeType, string> = {
+  text: 'bg-blue-500',
+  code: 'bg-slate-500',
+  video: 'bg-red-500',
+  image: 'bg-emerald-500',
+  pdf: 'bg-orange-500',
+};
+
+/**
+ * NodeLODBlob - Minimal colored dot for extreme zoom-out levels
+ * 
+ * Shows:
+ * - Small centered colored circle
+ * - Color-coded by node type
+ * 
+ * Used when: visibleHeight < 40px
+ * 
+ * Design:
+ * - Fixed 16x16px circle
+ * - Centered in container
+ * - Subtle glow effect
+ */
+export const NodeLODBlob = memo(({ type }: NodeLODBlobProps) => {
+  const bgColor = BLOB_COLORS[type] || BLOB_COLORS.text;
 
   return (
-    <div className="relative group flex items-center justify-center">
-      <motion.div 
-        animate={{ 
-          scale: [1, 1.15, 1],
-          opacity: [0.8, 1, 0.8]
-        }}
-        transition={{ 
-          duration: 4, 
-          repeat: Infinity, 
-          ease: "easeInOut",
-          delay: Math.random() * 2 
-        }}
-        className={`w-6 h-6 rounded-full ${styles.blob} shadow-[0_0_15px] ${selected ? 'ring-2 ring-white scale-125' : ''}`}
+    <div className="w-full h-full flex items-center justify-center">
+      <div
+        className={`
+          w-4 h-4 rounded-full ${bgColor}
+          shadow-lg shadow-current/30
+          ring-2 ring-white/20
+        `}
       />
     </div>
   );
 });
+
+NodeLODBlob.displayName = 'NodeLODBlob';

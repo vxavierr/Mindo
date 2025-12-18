@@ -93,10 +93,10 @@ function CanvasContent() {
   const isGraphLoaded = useMindoStore(state => state.isGraphLoaded);
 
   useEffect(() => {
-    if (user) {
+    if (user && !isGraphLoaded) {
       loadGraph(user.id);
     }
-  }, [user, loadGraph]);
+  }, [user, loadGraph, isGraphLoaded]);
 
   // Read nodeId from URL params
   const { nodeId: urlNodeId } = useParams<{ nodeId?: string }>();
@@ -311,7 +311,7 @@ function CanvasContent() {
         }}
         fitView
         className="z-0 react-flow transition-all duration-700"
-        minZoom={0.2}
+        minZoom={0.02}
         maxZoom={4}
         {...rfProps}
       >

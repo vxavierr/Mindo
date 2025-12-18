@@ -1,5 +1,7 @@
 # Plano de Implementação em Cascata – Mindo 2.0
 
+> **Última atualização:** 17/12/2024 (Auditoria Completa)
+
 ### 🧭 Visão Geral da Implementação
 
 - **Objetivo principal:** Transformar o protótipo frontend atual (React + Zustand + Mocks) em uma aplicação Full Stack robusta, integrando persistência real (Supabase), inteligência de grafos (Memgraph) e recursos de IA, sem quebrar a experiência de usuário "Premium" já conquistada.
@@ -27,7 +29,9 @@
 
 ---
 
-### 🧩 Fase 0 – Fundamentos e Estabilização de UX (Atual)
+### 🧩 Fase 0 – Fundamentos e Estabilização de UX
+
+> **Status:** ✅ CONCLUÍDA (com exceções documentadas)
 
 - **Objetivo central da fase:** Garantir que o frontend (Canvas e Editor) esteja visualmente polido, sem bugs de interação e com estruturas de dados prontas para exportação.
 - **Resultados esperados:**
@@ -38,27 +42,46 @@
 
 #### Tarefas detalhadas da Fase 0
 
-1.  **[Tarefa 0.1 – Correções Críticas de UX]** (✅ Concluído)
+1.  **[Tarefa 0.1 – Correções Críticas de UX]** ✅ Concluído
     - **Contexto:** O usuário precisa confiar na interface antes de conectarmos um backend.
     - **Módulos impactados:** `CanvasPage`, `MindNode`, `Edges`.
     - **Status:** Implementado (Persistência local, Destaque, Conexões).
 
-2.  **[Tarefa 0.2 – Padronização de Tipos de Dados (Data Contracts)]**
+2.  **[Tarefa 0.2 – Padronização de Tipos de Dados (Data Contracts)]** ✅ Concluído
     - **Contexto:** O frontend usa tipos (`MindNode`, `EdgeData`) que precisam bater com as tabelas do Supabase.
     - **Módulos impactados:** `types.ts`, `store/slices/*.ts`.
     - **Decisões de design:**
-        - Adicionar campos `user_id`, `created_at`, `updated_at` em todas as interfaces.
-        - Separar `VisualState` (x, y, zoom) de `DataState` (conteúdo, conexões) para facilitar a persistência parcial.
-    - **Passo a passo:**
-        1. Revisar `types.ts`.
-        2. Criar interfaces `DTO` (Data Transfer Object) para o que será enviado ao backend.
-        3. Atualizar `useMindoStore` para usar esses tipos.
-    - **Critério de pronto:** O projeto compila sem erros de tipo e os objetos no `console.log` do Zustand parecem prontos para um `POST /nodes`.
-    - **Impacto na próxima fase:** Permite criar as tabelas do Supabase copiando exatamente esses tipos.
+        - Campos `user_id`, `created_at`, `updated_at` em todas as interfaces ✅
+        - Interfaces `DTO` (Data Transfer Object) criadas: `NodeDTO`, `EdgeDTO`, `BaseEntity`
+        - Tipos de status: `'new' | 'learning' | 'review_due' | 'mastered' | 'inbox'`
+    - **Status:** Tipos alinhados com schema SQL (`features/canvas/types.ts`)
+
+3.  **[Tarefa 0.3 – Arquitetura Polimórfica de Nós]** ✅ Concluído (Shadow Feature)
+    - **Contexto:** Suporte a múltiplos tipos de conteúdo além de texto.
+    - **Módulos impactados:** `features/canvas/components/nodes/*`, `supabase/schema.sql`
+    - **Implementação:**
+        - 5 tipos de nós: `text`, `code`, `video`, `image`, `pdf`
+        - JSONB para dados polimórficos: campo `data` na tabela `nodes`
+        - Componentes especializados: `TextNode`, `CodeNode`, `VideoNode`, `ImageNode`, `PdfNode`
+    - **Status:** Funcional no frontend e schema SQL preparado.
+
+4.  **[Tarefa 0.4 – Sistema LOD (Level of Detail)]** ⚠️ NÃO UTILIZADO
+    - **Contexto:** Otimização de renderização por zoom.
+    - **Módulos criados:** `NodeLODBlob.tsx`, `NodeLODSimple.tsx`, `NodeLODDetail.tsx`
+    - **Status:** Código existe mas **não está sendo utilizado**. Considerar remoção ou implementação futura.
+    - **Decisão:** Revisar na Fase 1.5 se necessário para performance.
+
+5.  **[Tarefa 0.5 – D3-Force para Layout Tipo Obsidian]** 📋 BACKLOG
+    - **Contexto:** Alternativa ao Dagre para visualização orgânica estilo "Graph View" do Obsidian.
+    - **Módulos:** Importado em `createGraphSlice.ts` (`d3-force`)
+    - **Status:** Dependência instalada, lógica não implementada.
+    - **Uso futuro:** Considerar para um modo "Graph View" alternativo ao layout Dagre.
 
 ---
 
 ### ♻️ Fase 1 – O "Cérebro" na Nuvem (Supabase Core)
+
+> **Status:** ⏳ EM ANDAMENTO (~85% concluída)
 
 #### [Fase 1 – Persistência e Autenticação]
 
@@ -72,33 +95,73 @@
 
 #### Tarefas detalhadas da Fase 1
 
-1.  **[Tarefa 1.1 – Setup do Supabase e Auth]**
+1.  **[Tarefa 1.1 – Setup do Supabase e Auth]** ✅ Concluído
     - **Contexto:** Precisamos de um porteiro e um cofre.
     - **Módulos impactados:** `lib/supabase.ts`, `features/auth/*`.
-    - **Passo a passo:**
-        1. Criar projeto Supabase.
-        2. Configurar tabelas: `profiles`, `nodes`, `edges`, `memory_units`.
-        3. Implementar `AuthProvider` no React.
-        4. Criar telas de Login/Register (usando componentes Shadcn existentes).
-    - **Riscos:** RLS (Row Level Security) mal configurado expor dados. **Mitigação:** Testar acesso anônimo e garantir bloqueio.
-    - **Critério de pronto:** Usuário consegue criar conta, logar e ver seu perfil.
+    - **Implementação realizada:**
+        - ✅ Projeto Supabase criado (`.env.local` configurado)
+        - ✅ Tabelas: `profiles`, `nodes`, `edges`, `memory_units` (schema.sql)
+        - ✅ RLS (Row Level Security) configurado para todas as tabelas
+        - ✅ `AuthProvider` implementado (`features/auth/AuthContext.tsx`)
+        - ✅ Telas Login/Register (`AuthPage.tsx`) com Google OAuth + Email/Senha
+        - ✅ Migrations: `001_polymorphic_architecture.sql`, `002_edge_handles.sql`
+    - **Riscos:** RLS mal configurado. **Mitigação:** Testar com múltiplos usuários.
 
-2.  **[Tarefa 1.2 – Sincronização Zustand <-> Supabase]**
+2.  **[Tarefa 1.2 – Sincronização Zustand <-> Supabase]** ⏳ 90% Concluída
     - **Contexto:** O Zustand é a verdade local. O Supabase é a verdade remota.
-    - **Módulos impactados:** `store/middleware/syncMiddleware.ts` (novo).
-    - **Decisões de design:**
-        - Usar estratégia "Optimistic UI": atualiza a tela na hora, envia pro banco em background.
-        - Se falhar, reverte (rollback) e avisa o usuário.
-    - **Passo a passo:**
-        1. Criar serviços de API (`api/nodes.ts`, `api/edges.ts`).
-        2. No `createGraphSlice`, substituir a lógica de apenas `set()` por `set() + api.createNode()`.
-        3. Implementar carregamento inicial (`useEffect` que busca dados do Supabase ao iniciar).
-    - **Critério de pronto:** Criar nó no Canvas -> Aparece na tabela do Supabase. Recarregar página -> Nó vem do Supabase.
-    - **Impacto na próxima fase:** Dados reais no banco permitem que o Memgraph (Fase 2) tenha o que analisar.
+    - **Módulos impactados:** `api/*.ts`, `store/slices/createGraphSlice.ts`.
+    - **Implementação realizada:**
+        - ✅ `api/nodes.ts` - CRUD completo com JSONB (position, data)
+        - ✅ `api/edges.ts` - CRUD com `source_handle`, `target_handle`
+        - ✅ `api/memoryUnits.ts` - CRUD de flashcards
+        - ✅ `loadGraph()` implementado em `createGraphSlice.ts`
+        - ✅ Optimistic UI: atualiza local, persiste em background
+        - ⚠️ **BUG:** `loadGraph()` chamado sem verificar `isGraphLoaded` (ver Tarefa 1.2.1)
+        - ❌ Rollback em caso de falha não implementado
+        - ❌ Indicador visual de "Sincronizando..." não implementado
+    - **Critério de pronto:** Criar nó -> Aparece no Supabase -> Recarregar -> Nó persiste.
+
+    **[Tarefa 1.2.1 – Corrigir Guard de loadGraph]** ❌ PENDENTE (PRÓXIMO PASSO)
+    - **Problema:** `CanvasPage.tsx:95-99` chama `loadGraph()` em todo mount sem verificar `isGraphLoaded`
+    - **Impacto:** Recarrega dados desnecessariamente ao navegar entre páginas
+    - **Correção:** Adicionar guard `if (user && !isGraphLoaded)` no useEffect
+
+    **[Tarefa 1.2.2 – Validar Tipos de Status no Supabase]** ❌ PENDENTE
+    - **Contexto:** Os tipos de status (`new`, `learning`, `review_due`, `mastered`, `inbox`) estão definidos no TS, mas precisam validar se a lógica de transição está sendo sincronizada corretamente com o banco.
+    - **Verificar:** Se as transições de status (ex: `new` -> `learning` -> `mastered`) estão persistindo.
+
+3.  **[Tarefa 1.3 – Supabase Storage para Mídia]** ⏳ 80% Concluída (Shadow Feature)
+    - **Contexto:** Armazenamento de arquivos (imagens, vídeos, PDFs).
+    - **Módulos impactados:** `createGraphSlice.ts`, `*Node.tsx` components.
+    - **Implementação realizada:**
+        - ✅ Bucket: `mindo-assets` configurado
+        - ✅ Upload de imagens, vídeos e PDFs funcionando
+        - ⚠️ **BUG:** Limpeza automática de arquivos ao deletar nó **NÃO FUNCIONA**
+    - **Pendência:** Depurar `deleteFileFromStorage()` em `createGraphSlice.ts`
+
+4.  **[Tarefa 1.4 – Persistência de Layout]** ✅ Concluído (Shadow Feature)
+    - **Contexto:** Salvar posições e dimensões dos nós.
+    - **Implementação realizada:**
+        - ✅ Posição salva em coluna JSONB `position`
+        - ✅ Dimensões salvas em `data.style` (width, height)
+        - ✅ Edge handles persistidos (`source_handle`, `target_handle`)
+        - ✅ Migration `002_edge_handles.sql` aplicada
+
+5.  **[Tarefa 1.5 – Dashboard e Analytics]** ⚠️ PARCIALMENTE FUNCIONAL
+    - **Contexto:** Widgets de métricas e visualização de progresso.
+    - **Módulos:** `features/dashboard/*`, `features/analytics/*`
+    - **Status:**
+        - ✅ Estrutura de tipos (`UserMetrics`, `RadarDataPoint`)
+        - ✅ Componentes visuais (StatCard, HeatmapBlock)
+        - ⚠️ **BUG:** Gráfico de Confiança **não funciona**
+        - ❌ Dados real do banco não alimentam os widgets (mocks)
+    - **Pendência:** Conectar widgets a dados reais do Supabase.
 
 ---
 
 ### ♻️ Fase 2 – Inteligência de Grafos (Memgraph & FastAPI)
+
+> **Status:** 📋 NÃO INICIADA
 
 #### [Fase 2 – O Diferencial Neural]
 
@@ -110,7 +173,7 @@
 
 #### Tarefas detalhadas da Fase 2
 
-1.  **[Tarefa 2.1 – Setup do Backend Python (FastAPI)]**
+1.  **[Tarefa 2.1 – Setup do Backend Python (FastAPI)]** ❌ Pendente
     - **Contexto:** O Python será o orquestrador da inteligência.
     - **Módulos impactados:** Novo repositório ou pasta `/backend`.
     - **Passo a passo:**
@@ -119,7 +182,7 @@
         3. Criar endpoint de "Health Check".
     - **Critério de pronto:** `curl localhost:8000/health` retorna 200 OK.
 
-2.  **[Tarefa 2.2 – Sincronização Postgres -> Memgraph]**
+2.  **[Tarefa 2.2 – Sincronização Postgres -> Memgraph]** ❌ Pendente
     - **Contexto:** O Memgraph precisa saber o que está no Supabase.
     - **Decisões de design:**
         - Usar **CDC (Change Data Capture)** ou Webhooks do Supabase.
@@ -130,7 +193,7 @@
         3. Implementar lógica Cypher para inserir no Memgraph.
     - **Critério de pronto:** Criar nó no Frontend -> Aparece no Memgraph Lab (visualizador do banco).
 
-3.  **[Tarefa 2.3 – Algoritmos de Recomendação]**
+3.  **[Tarefa 2.3 – Algoritmos de Recomendação]** ❌ Pendente
     - **Contexto:** O app deve sugerir conexões.
     - **Passo a passo:**
         1. Implementar algoritmo de "Link Prediction" (MAGE library do Memgraph).
@@ -142,6 +205,8 @@
 
 ### ♻️ Fase 3 – IA Generativa e RAG (Conteúdo Inteligente)
 
+> **Status:** 📋 NÃO INICIADA
+
 #### [Fase 3 – O Assistente de Conteúdo]
 
 - **Objetivo central da fase:** Permitir que o Mindo entenda e gere conteúdo. O foco aqui é **texto e semântica**.
@@ -152,16 +217,17 @@
 
 #### Tarefas detalhadas da Fase 3
 
-1.  **[Tarefa 3.1 – Pipeline de Embeddings]**
+1.  **[Tarefa 3.1 – Pipeline de Embeddings]** ❌ Pendente
     - **Contexto:** Transformar cada nó em um vetor matemático.
     - **Módulos impactados:** FastAPI (Service: `embedding_service`), Supabase (`pgvector`).
+    - **Nota:** Coluna `embedding vector(1536)` já existe no schema SQL (preparado para futuro).
     - **Passo a passo:**
         1. Implementar trigger no Supabase ou hook no FastAPI: ao criar/editar nó -> gerar embedding (OpenAI `text-embedding-3-small`).
         2. Salvar vetor na coluna `embedding` da tabela `nodes`.
         3. Criar índice HNSW no Postgres para busca rápida.
     - **Critério de pronto:** Busca por "animal que late" retorna o nó "Cachorro".
 
-2.  **[Tarefa 3.2 – Fábrica de Flashcards (LLM Pipeline)]**
+2.  **[Tarefa 3.2 – Fábrica de Flashcards (LLM Pipeline)]** ❌ Pendente
     - **Contexto:** O usuário escreve, a IA cria o teste.
     - **Passo a passo:**
         1. Integrar cliente Groq (LLaMA 3.1) no FastAPI.
@@ -172,6 +238,8 @@
 ---
 
 ### ♻️ Fase 4 – Machine Learning & Personalização (O Cérebro Comportamental)
+
+> **Status:** 📋 NÃO INICIADA
 
 #### [Fase 4 – Aprendendo sobre o Usuário]
 
@@ -185,7 +253,7 @@
 
 #### Tarefas detalhadas da Fase 4
 
-1.  **[Tarefa 4.1 – Feature Store e Coleta de Métricas]**
+1.  **[Tarefa 4.1 – Feature Store e Coleta de Métricas]** ❌ Pendente
     - **Contexto:** ML precisa de histórico. Precisamos estruturar os dados de "como o usuário estuda".
     - **Módulos impactados:** Supabase (`analytics_logs`), FastAPI.
     - **Decisões de design:**
@@ -195,7 +263,7 @@
         2. Criar views no Postgres que agregam esses dados em "Features" (ex: `avg_response_time`, `session_frequency`).
     - **Critério de pronto:** Tabela de features populada com dados reais de uso.
 
-2.  **[Tarefa 4.2 – Modelos Tabulares (XGBoost/Random Forest)]**
+2.  **[Tarefa 4.2 – Modelos Tabulares (XGBoost/Random Forest)]** ❌ Pendente
     - **Contexto:** Prever a dificuldade de um card e sugerir o próximo passo.
     - **Módulos impactados:** Serviço ML (Python/Scikit-learn).
     - **Passo a passo:**
@@ -204,7 +272,7 @@
         3. **Aplicação:** Ajustar o intervalo do SRS com base na predição (ex: se o modelo diz que o usuário vai esquecer rápido, agendar revisão para amanhã, não semana que vem).
     - **Critério de pronto:** O sistema ajusta datas de revisão de forma diferente para usuários diferentes baseados no histórico.
 
-3.  **[Tarefa 4.3 – Inteligência de Grafo (GNN / PyTorch Geometric)]**
+3.  **[Tarefa 4.3 – Inteligência de Grafo (GNN / PyTorch Geometric)]** ❌ Pendente
     - **Contexto:** Encontrar conexões que o usuário não viu.
     - **Módulos impactados:** Memgraph, PyTorch Geometric.
     - **Passo a passo:**
@@ -234,7 +302,19 @@
 
 - **Mobile Nativo (Capacitor):** Deixado para **Fase 4**. O app web responsivo (PWA) atende o início. Focar em mobile nativo agora desviaria recursos da inteligência.
 - **Colaboração em Tempo Real (Multiplayer):** Complexidade altíssima. Fica para uma versão 3.0. O foco agora é "Single Player Mode" perfeito.
+- **Graph View (D3-Force):** Visualização alternativa estilo Obsidian. Dependência já instalada, implementar após Fase 2.
 
 ---
 
-**Implementation Cascade Architect v1.0** - Plano gerado para execução imediata.
+### 🚨 Bugs Conhecidos (Fase 1)
+
+| ID | Descrição | Arquivo | Prioridade |
+|----|-----------|---------|------------|
+| BUG-001 | `loadGraph()` chamado sem guard `isGraphLoaded` | `CanvasPage.tsx:95-99` | 🔴 Alta |
+| BUG-002 | Limpeza de arquivos no Storage não funciona | `createGraphSlice.ts` | 🟡 Média |
+| BUG-003 | Gráfico de Confiança não renderiza | `features/dashboard/*` | 🟡 Média |
+| BUG-004 | Sistema LOD não utilizado | `nodes/NodeLOD*.tsx` | 🟢 Baixa |
+
+---
+
+**Implementation Cascade Architect v1.1** - Plano atualizado após auditoria de código (17/12/2024).

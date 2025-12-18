@@ -32,7 +32,15 @@ export const ImageNode = memo((props: NodeProps<MindNodeData>) => {
     };
 
     return (
-        <NeuralNodeWrapper id={id} selected={selected ?? false} isConnectable={isConnectable}>
+        <NeuralNodeWrapper
+            id={id}
+            selected={selected ?? false}
+            isConnectable={isConnectable}
+            label={data.label || 'Imagem'}
+            nodeType={data.type}
+            width={(props as any).width || 300}
+            height={(props as any).height || 200}
+        >
             <div className="flex flex-col h-full p-3">
                 {/* Header */}
                 <div className="flex items-center gap-2 mb-2 flex-shrink-0">

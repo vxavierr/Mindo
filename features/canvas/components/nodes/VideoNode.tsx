@@ -111,7 +111,15 @@ export const VideoNode = memo((props: NodeProps<MindNodeData>) => {
     }, [id, updateNode]);
 
     return (
-        <NeuralNodeWrapper id={id} selected={selected ?? false} isConnectable={isConnectable}>
+        <NeuralNodeWrapper
+            id={id}
+            selected={selected ?? false}
+            isConnectable={isConnectable}
+            label={data.label || 'Vídeo'}
+            nodeType={data.type}
+            width={(props as any).width || 280}
+            height={(props as any).height || 200}
+        >
             <div className="flex flex-col h-full p-3">
                 {/* Header */}
                 <div className="flex items-center gap-2 mb-2 flex-shrink-0">
